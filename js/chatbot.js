@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', function() {
         typingIndicator.classList.remove('active');
     }
 
-    // Send message to backend API (Netlify Function)
+    // Send message to n8n webhook
     async function sendMessageToBot(message) {
         try {
-            const response = await fetch('/.netlify/functions/chat', {
+            const response = await fetch('https://evolvedtroglodyte.app.n8n.cloud/webhook/portfolio-website', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
