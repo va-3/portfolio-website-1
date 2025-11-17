@@ -120,15 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const data = await response.json();
             console.log('Response from n8n:', data);
-            console.log('Type of data:', typeof data);
-            console.log('data.message:', data.message);
-            console.log('All keys in data:', Object.keys(data));
-            console.log('Full JSON string:', JSON.stringify(data, null, 2));
-
-            // Try multiple ways to get the message
-            const botMessage = data.message || data.response || data.text || data.output || JSON.stringify(data);
-            console.log('Final bot message:', botMessage);
-            return botMessage;
+            return data.output;
         } catch (error) {
             console.error('Chatbot error details:', error);
             throw error;
