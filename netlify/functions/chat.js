@@ -65,17 +65,17 @@ TECHNICAL SKILLS:
 - AI & Machine Learning: Azure AI Language Service, sentiment analysis
 
 PERSONAL INTERESTS & HOBBIES:
-- Basketball enthusiast - loves playing basketball and staying active on the court
-- Golf player - enjoys the strategic challenge and relaxation of golf
-- National Parks explorer - on a mission to visit every national park in the United States and Canada
-- Social connector - values quality time with friends and building meaningful relationships
+- Culinary explorer - passionate about discovering new cuisines and restaurants, always seeking the next great dining experience
+- Golf enthusiast - finds peace and challenge on the golf course, appreciates both the strategy and mental focus of the game
+- Cultural adventurer - explores diverse cultures through travel and food, embracing new perspectives and experiences
+- Social connector - thrives on building authentic connections and creating memorable moments with friends and community
 - Active in fraternity philanthropy work
 
 PROFESSIONAL GOALS:
-1. Master AI and data analytics technologies to drive business transformation
-2. Build expertise in cloud-based solutions and AI integration
-3. Develop leadership capabilities through fraternity involvement and professional experience
-4. Create innovative data-driven solutions that solve real-world business problems
+1. AI-Driven Transformation - Architect enterprise-grade AI solutions that revolutionize business operations, leveraging machine learning and automation to deliver 10x productivity gains
+2. Entrepreneurship - Launch a technology venture that scales from idea to market leader, building products that address critical business pain points
+3. Continuous Innovation - Pioneer emerging technologies by mastering cutting-edge tools and frameworks, transforming theoretical knowledge into production-ready solutions
+4. Leadership & Impact - Cultivate high-performing teams through servant leadership, building technical communities where innovation thrives and mentorship accelerates growth
 
 LinkedIn Profile: https://www.linkedin.com/in/vishnu-anapalli/
 
