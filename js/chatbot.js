@@ -101,15 +101,21 @@ document.addEventListener('DOMContentLoaded', function() {
         typingIndicator.classList.remove('active');
     }
 
-    // Send message to n8n webhook
+    // Session ID for conversation continuity
+    let sessionId = null;
+
+    // Send message to Netlify function
     async function sendMessageToBot(message) {
         try {
-            const response = await fetch('https://evolvedtroglodyte.app.n8n.cloud/webhook/portfolio-website', {
+            const response = await fetch('/.netlify/functions/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message })
+                body: JSON.stringify({
+                    message,
+                    sessionId
+                })
             });
 
             if (!response.ok) {
@@ -120,66 +126,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const data = await response.json();
 
-            // Enhanced debugging - log the full response structure
-            console.log('=== RESPONSE DEBUGGING ===');
-            console.log('Full response object:', data);
-            console.log('Response type:', typeof data);
-            console.log('All keys:', Object.keys(data));
-            console.log('========================');
-
-            // Try to extract message from various possible structures
-            let extractedMessage = null;
-
-            // Check standard fields first (data.message, data.output, data.response)
-            if ('message' in data && typeof data.message === 'string') {
-                extractedMessage = data.message;
-                console.log('✓ Found data.message:', extractedMessage);
-            } else if ('output' in data && typeof data.output === 'string') {
-                extractedMessage = data.output;
-                console.log('✓ Found data.output:', extractedMessage);
-            } else if ('response' in data && typeof data.response === 'string') {
-                extractedMessage = data.response;
-                console.log('✓ Found data.response:', extractedMessage);
-            } else {
-                // Handle n8n's nested structure - recursively search for "output" field
-                console.log('Checking nested structure...');
-
-                function findOutput(obj, depth = 0) {
-                    if (depth > 10) return null; // Prevent infinite recursion
-
-                    if (obj && typeof obj === 'object') {
-                        // Check for output field (case-insensitive)
-                        if ('output' in obj && typeof obj.output === 'string') {
-                            return obj.output;
-                        }
-                        if ('Output' in obj && typeof obj.Output === 'string') {
-                            return obj.Output;
-                        }
-                        // Recursively search all values
-                        for (const value of Object.values(obj)) {
-                            const result = findOutput(value, depth + 1);
-                            if (result) return result;
-                        }
-                    } else if (typeof obj === 'string' && obj.length > 20) {
-                        // If we find a long string, it's likely the response
-                        return obj;
-                    }
-                    return null;
-                }
-
-                extractedMessage = findOutput(data);
-                if (extractedMessage) {
-                    console.log('✓ Found nested output:', extractedMessage);
-                }
+            // Store session ID for conversation continuity
+            if (data.sessionId) {
+                sessionId = data.sessionId;
             }
 
-            if (extractedMessage) {
-                return extractedMessage;
+            // Return the assistant's response
+            if (data.response && typeof data.response === 'string') {
+                return data.response;
             } else {
-                console.error('✗ Could not find message in response.');
-                console.error('Expected format: { "message": "text" } or nested n8n format');
-                console.error('Received:', JSON.stringify(data, null, 2));
-                return 'Error: Invalid response format from server. Please check the console for details.';
+                console.error('Invalid response format:', data);
+                throw new Error('Invalid response format from server');
             }
         } catch (error) {
             console.error('Chatbot error details:', error);
