@@ -19,13 +19,18 @@ document.addEventListener('DOMContentLoaded', function() {
         new DobbyLogo('preview-dobby-avatar', 28);
     }
 
-    // Expand chat on input focus
-    chatbotInput.addEventListener('focus', function() {
+    // Expand chat on input focus or click
+    function expandChat() {
         if (!isExpanded) {
+            console.log('Expanding chat card...');
             aiChatCard.classList.add('expanded');
             isExpanded = true;
+            console.log('Chat card classes:', aiChatCard.className);
         }
-    });
+    }
+
+    chatbotInput.addEventListener('focus', expandChat);
+    chatbotInput.addEventListener('click', expandChat);
 
     // Handle form submission
     chatbotForm.addEventListener('submit', async function(e) {

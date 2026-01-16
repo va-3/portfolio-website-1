@@ -12,15 +12,12 @@ class ThemeManager {
     }
 
     getInitialTheme() {
-        // Check localStorage first
+        // Always default to light mode on first visit
+        // Users can toggle to dark mode if they prefer
         const stored = localStorage.getItem('portfolio-theme');
         if (stored) return stored;
 
-        // Check system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        }
-
+        // Default to light mode (ignore system preference)
         return 'light';
     }
 
