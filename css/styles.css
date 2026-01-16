@@ -940,8 +940,8 @@ section {
     min-height: 0;
     background: #FFFFFF;
     border: none;
-    border-radius: 16px;
-    margin: 0.5rem;
+    border-radius: 0;
+    margin: 0;
 }
 
 [data-theme="dark"] .chat-messages-area {
