@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatbotInput = document.getElementById('chatbot-input');
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
+    const collapseBtn = document.getElementById('collapse-chat-btn');
 
     let isExpanded = false;
 
@@ -34,6 +35,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     chatbotInput.addEventListener('focus', expandChat);
     chatbotInput.addEventListener('click', expandChat);
+
+    // Collapse chat function
+    function collapseChat() {
+        aiChatCard.classList.remove('expanded');
+        isExpanded = false;
+        // Clear messages when collapsing
+        chatbotMessages.innerHTML = '';
+        console.log('Chat collapsed');
+    }
+
+    // Add collapse button listener
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', collapseChat);
+    }
 
     // Handle form submission
     chatbotForm.addEventListener('submit', async function(e) {

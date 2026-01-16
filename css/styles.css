@@ -938,11 +938,15 @@ section {
     overflow: hidden;
     padding: 0 1rem 0.5rem 1rem;
     min-height: 0;
-    background: transparent;
+    background: #FFFFFF;
+    border: 2px solid var(--primary-color);
+    border-radius: 16px;
+    margin: 0.5rem;
 }
 
 [data-theme="dark"] .chat-messages-area {
-    background: rgba(0, 0, 0, 0.15);
+    background: #1a1625;
+    border-color: var(--primary-color);
 }
 
 .chatbot-messages {
@@ -1052,6 +1056,35 @@ section {
     align-items: center;
     justify-content: center;
     position: relative;
+}
+
+.collapse-chat-btn {
+    display: none;
+    position: absolute;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--primary-color);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all var(--transition-base);
+}
+
+.ai-chat-card.expanded .collapse-chat-btn {
+    display: flex;
+}
+
+.collapse-chat-btn:hover {
+    background: rgba(var(--primary-color-rgb), 0.1);
+    transform: scale(1.05);
+}
+
+.collapse-chat-btn i {
+    font-size: 1rem;
 }
 
 .dobby-branding {
