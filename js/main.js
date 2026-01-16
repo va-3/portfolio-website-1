@@ -177,16 +177,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add active state to current section in nav
     const sections = document.querySelectorAll('section[id]');
-    
+
     window.addEventListener('scroll', function() {
         let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            const sectionHeight = section.clientHeight;
-            if (window.pageYOffset >= sectionTop - 100) {
-                current = section.getAttribute('id');
-            }
-        });
+
+        // Check if we're at the bottom of the page
+        const isAtBottom = window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 50;
+
+        if (isAtBottom) {
+            // If at bottom, highlight Contact
+            current = 'contact';
+        } else {
+            // Normal scroll spy behavior
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+        }
 
         navLinks.forEach(link => {
             link.classList.remove('active');

@@ -3,36 +3,27 @@
 // ===================================
 
 document.addEventListener('DOMContentLoaded', function() {
-    const chatbotTrigger = document.getElementById('chatbot-trigger');
-    const chatbotModal = document.getElementById('chatbot-modal');
-    const chatbotClose = document.getElementById('chatbot-close');
+    const aiChatCard = document.getElementById('ai-chat-card');
     const chatbotForm = document.getElementById('chatbot-form');
     const chatbotInput = document.getElementById('chatbot-input');
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
 
-    // Open chatbot modal
-    chatbotTrigger.addEventListener('click', function() {
-        chatbotModal.classList.add('active');
-        chatbotInput.focus();
-    });
+    let isExpanded = false;
 
-    // Close chatbot modal
-    chatbotClose.addEventListener('click', function() {
-        chatbotModal.classList.remove('active');
-    });
+    // Initialize Dobby logos
+    if (document.getElementById('header-dobby-logo')) {
+        new DobbyLogo('header-dobby-logo', 50);
+    }
+    if (document.getElementById('preview-dobby-avatar')) {
+        new DobbyLogo('preview-dobby-avatar', 28);
+    }
 
-    // Close on outside click
-    chatbotModal.addEventListener('click', function(e) {
-        if (e.target === chatbotModal) {
-            chatbotModal.classList.remove('active');
-        }
-    });
-
-    // Close on escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && chatbotModal.classList.contains('active')) {
-            chatbotModal.classList.remove('active');
+    // Expand chat on input focus
+    chatbotInput.addEventListener('focus', function() {
+        if (!isExpanded) {
+            aiChatCard.classList.add('expanded');
+            isExpanded = true;
         }
     });
 
@@ -67,24 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add message to chat
     function addMessage(text, sender) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender}-message`;
-
-        const avatar = document.createElement('div');
-        avatar.className = 'message-avatar';
-        avatar.innerHTML = sender === 'bot'
-            ? '<i class="fas fa-robot"></i>'
-            : '<i class="fas fa-user"></i>';
-
-        const content = document.createElement('div');
-        content.className = 'message-content';
-
-        const p = document.createElement('p');
-        p.textContent = text;
-        content.appendChild(p);
-
-        messageDiv.appendChild(avatar);
-        messageDiv.appendChild(content);
-
+        messageDiv.className = `chatbot-message ${sender}`;
+        messageDiv.textContent = text;
         chatbotMessages.appendChild(messageDiv);
 
         // Scroll to bottom
@@ -94,6 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show typing indicator
     function showTypingIndicator() {
         typingIndicator.classList.add('active');
+        // Scroll to show typing indicator
+        typingIndicator.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
     // Hide typing indicator

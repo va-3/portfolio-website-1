@@ -6,8 +6,8 @@
     <meta name="description" content="Vishnu Anapalli - Professional Portfolio showcasing experience, skills, and projects">
     <title>Vishnu Anapalli | Professional Portfolio</title>
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Fonts - TheraBridge Design System -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Crimson+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,13 +20,17 @@
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">
-                <a href="#top">
-                    <img src="images/logo.jpg" alt="Logo" class="nav-logo">
+                <!-- Home Button & Theme Toggle -->
+                <a href="#top" class="home-link" aria-label="Home">
+                    <i class="fas fa-home"></i>
                 </a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-sun sun-icon"></i>
+                    <i class="fas fa-moon moon-icon"></i>
+                </button>
             </div>
             <ul class="nav-menu">
                 <li><a href="#about" class="nav-link">About</a></li>
-                <li><a href="#goals" class="nav-link">Goals</a></li>
                 <li><a href="#experience" class="nav-link">Experience</a></li>
                 <li><a href="#gallery" class="nav-link">Gallery</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -47,21 +51,51 @@
                     <span class="greeting">Hello, I'm</span>
                     <span class="name">Vishnu Anapalli</span>
                 </h1>
-                <p class="hero-subtitle">Full Stack Engineer | AI Developer | Hackathon Winner</p>
-                <div class="hero-cta">
-                    <a href="#about" class="btn btn-primary">Explore My Work</a>
-                    <a href="https://www.linkedin.com/in/vishnu-anapalli/" target="_blank" class="btn btn-secondary">
-                        <i class="fab fa-linkedin"></i> LinkedIn Profile
-                    </a>
-                </div>
+                <p class="hero-subtitle">Full Stack Dev | AI Engineer | Analyst</p>
 
-                <!-- AI Chatbot CTA -->
-                <div class="chatbot-cta">
-                    <button id="chatbot-trigger" class="chatbot-trigger-btn">
-                        <i class="fas fa-comments"></i>
-                        <span>Ask Vishnu</span>
-                    </button>
-                    <p class="chatbot-description">Ask me anything about my professional background<br>😊</p>
+                <!-- Vish AI Chatbot Card -->
+                <div class="ai-chat-card" id="ai-chat-card">
+                    <!-- Header with DOBBY branding -->
+                    <div class="chat-card-header">
+                        <div class="dobby-branding">
+                            <div id="header-dobby-logo" class="header-dobby-logo"></div>
+                            <span class="dobby-text">DOBBY</span>
+                        </div>
+                    </div>
+
+                    <!-- Preview (shown when collapsed) -->
+                    <div class="chat-card-preview" id="chat-preview">
+                        <div id="preview-dobby-avatar" class="preview-dobby-avatar"></div>
+                        <div class="preview-message">
+                            <p>Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!</p>
+                        </div>
+                    </div>
+
+                    <!-- Messages area (shown when expanded) -->
+                    <div class="chat-messages-area" id="chat-messages-area">
+                        <div class="chatbot-messages" id="chatbot-messages"></div>
+                        <div class="typing-indicator" id="typing-indicator">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    <!-- Input area (always visible) -->
+                    <div class="chat-card-input">
+                        <form class="chat-input-form" id="chatbot-form">
+                            <input
+                                type="text"
+                                placeholder="Ask me anything..."
+                                id="chatbot-input"
+                                class="chat-input-field"
+                                autocomplete="off"
+                            />
+                            <button type="submit" class="chat-send-button" aria-label="Send message">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div class="hero-image">
@@ -94,59 +128,6 @@
                             Your browser does not support the video tag.
                         </video>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Professional Goals Section -->
-    <section id="goals" class="goals-section">
-        <div class="container">
-            <h2 class="section-title">Professional Goals</h2>
-            <div class="goals-grid">
-                <div class="goal-card">
-                    <div class="goal-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <h3>AI-Driven Transformation</h3>
-                    <p>
-                        Architect enterprise-grade AI solutions that revolutionize business operations,
-                        leveraging machine learning and automation to deliver 10x productivity gains
-                        and unlock unprecedented competitive advantages in data-driven markets.
-                    </p>
-                </div>
-                <div class="goal-card">
-                    <div class="goal-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Entrepreneurship</h3>
-                    <p>
-                        Launch a technology venture that scales from idea to market leader, building
-                        products that address critical business pain points while fostering a culture
-                        of innovation, agility, and customer obsession.
-                    </p>
-                </div>
-                <div class="goal-card">
-                    <div class="goal-icon">
-                        <i class="fas fa-lightbulb"></i>
-                    </div>
-                    <h3>Continuous Innovation</h3>
-                    <p>
-                        Pioneer emerging technologies by mastering cutting-edge tools and frameworks,
-                        transforming theoretical knowledge into production-ready solutions that push
-                        the boundaries of what's possible in AI and data engineering.
-                    </p>
-                </div>
-                <div class="goal-card">
-                    <div class="goal-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Leadership & Impact</h3>
-                    <p>
-                        Cultivate high-performing teams through servant leadership, building technical
-                        communities where innovation thrives, mentorship accelerates growth, and every
-                        team member contributes to transformative outcomes.
-                    </p>
                 </div>
             </div>
         </div>
@@ -253,48 +234,23 @@
         </div>
     </section>
 
-    <!-- Fun Facts Section -->
-    <section class="fun-facts-section">
-        <div class="container">
-            <h2 class="section-title">Fun Facts</h2>
-            <div class="facts-grid">
-                <div class="fact-card">
-                    <i class="fas fa-utensils fact-icon"></i>
-                    <h3>Culinary Explorer</h3>
-                    <p>Love cooking with my family and trying new cuisines, discovering different flavors and creating memories in the kitchen</p>
-                </div>
-                <div class="fact-card">
-                    <i class="fas fa-basketball fact-icon"></i>
-                    <h3>Sports Enjoyer</h3>
-                    <p>Find peace and challenge on the golf course and excitement on the basketball court, appreciating the strategy and competition</p>
-                </div>
-                <div class="fact-card">
-                    <i class="fas fa-globe-americas fact-icon"></i>
-                    <h3>Adventurer</h3>
-                    <p>Explore diverse cultures through travel and food, embracing new perspectives and experiences along the way</p>
-                </div>
-                <div class="fact-card">
-                    <i class="fas fa-users fact-icon"></i>
-                    <h3>Social Connector</h3>
-                    <p>Thrive on building authentic connections and creating memorable moments with friends and community</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Contact Section -->
     <section id="contact" class="contact-section">
         <div class="container">
             <h2 class="section-title">Let's Connect</h2>
             <div class="contact-content">
-                <p class="contact-text">
-                    I'm always interested in new opportunities, collaborations, and conversations.
-                    Feel free to reach out through LinkedIn or ask me any question using the chatbot below!
-                </p>
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/vishnu-anapalli/" target="_blank" class="social-link" aria-label="LinkedIn">
                         <i class="fab fa-linkedin"></i>
                         <span>Connect on LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/va-3" target="_blank" class="social-link" aria-label="GitHub">
+                        <i class="fab fa-github"></i>
+                        <span>View My Work</span>
+                    </a>
+                    <a href="mailto:vishnuanapalli@gmail.com" class="social-link" aria-label="Email">
+                        <i class="fas fa-envelope"></i>
+                        <span>Send Me an Email</span>
                     </a>
                 </div>
             </div>
@@ -304,53 +260,14 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Vishnu Anapalli. All rights reserved.</p>
+            <p>&copy; 2026 Vishnu Anapalli. All rights reserved.</p>
             <p>Built with passion and innovation</p>
         </div>
     </footer>
 
-    <!-- AI Chatbot Modal -->
-    <div class="chatbot-modal" id="chatbot-modal">
-        <div class="chatbot-modal-content">
-            <div class="chatbot-header">
-                <h3>Ask Vishnu</h3>
-                <button class="chatbot-close" id="chatbot-close" aria-label="Close chatbot">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="chatbot-messages" id="chatbot-messages">
-                <div class="message bot-message">
-                    <div class="message-avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="message-content">
-                        <p>Hi! I'm an AI assistant here to answer questions about Vishnu's professional background, education, skills, and experience. Ask me anything!</p>
-                    </div>
-                </div>
-            </div>
-            <div class="chatbot-input-area">
-                <div class="typing-indicator" id="typing-indicator">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <form class="chatbot-form" id="chatbot-form">
-                    <input
-                        type="text"
-                        class="chatbot-input"
-                        id="chatbot-input"
-                        placeholder="Type your question here..."
-                        autocomplete="off"
-                    >
-                    <button type="submit" class="chatbot-send" aria-label="Send message">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <!-- JavaScript -->
+    <script src="js/theme.js"></script>
     <script src="js/main.js"></script>
     <script src="js/chatbot.js"></script>
 </body>
