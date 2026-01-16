@@ -1009,28 +1009,28 @@ section {
 
 .typing-indicator {
     display: none;
-    padding: 8px 12px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    width: 60px;
+    padding: 4px 0;
+    background: transparent;
+    border: none;
     align-self: flex-start;
+    margin-left: 1rem;
 }
 
 .typing-indicator.active {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
 }
 
 .typing-indicator span {
     display: inline-block;
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
     background: var(--text-secondary);
     border-radius: 50%;
-    animation: typing 1.4s infinite;
+    opacity: 0.6;
+    animation: typing 1.4s infinite ease-in-out;
 }
 
 .typing-indicator span:nth-child(2) {
@@ -1044,9 +1044,11 @@ section {
 @keyframes typing {
     0%, 60%, 100% {
         transform: translateY(0);
+        opacity: 0.6;
     }
     30% {
-        transform: translateY(-6px);
+        transform: translateY(-4px);
+        opacity: 1;
     }
 }
 
