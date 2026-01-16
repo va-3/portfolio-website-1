@@ -130,6 +130,7 @@ body {
 
 .nav-brand {
     grid-column: 1;
+    justify-self: start;
 }
 
 .nav-menu {
@@ -393,7 +394,7 @@ section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: center;
+    align-items: start;
 }
 
 .about-text {
@@ -414,7 +415,7 @@ section {
 .about-video {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .video-container {
