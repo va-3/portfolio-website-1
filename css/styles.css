@@ -1000,9 +1000,9 @@ section {
 
 /* Dark mode bot messages - lighter contrasting background */
 [data-theme="dark"] .chatbot-message.bot {
-    background: #3d3848;
+    background: #2a2535;
     color: #E5E5E5;
-    border: 1px solid #534d5e;
+    border: 1px solid #3a3545;
 }
 
 .typing-indicator {
