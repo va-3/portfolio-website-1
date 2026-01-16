@@ -91,8 +91,8 @@ body {
 }
 
 .navbar .container {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
     align-items: center;
     padding-top: var(--spacing-sm);
     padding-bottom: var(--spacing-sm);
@@ -103,6 +103,11 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-color);
+}
+
+.nav-brand a {
+    display: inline-block;
+    cursor: pointer;
 }
 
 .nav-logo {
@@ -123,10 +128,21 @@ body {
     border-color: var(--primary-light);
 }
 
+.nav-brand {
+    grid-column: 1;
+}
+
 .nav-menu {
+    grid-column: 2;
     display: flex;
     list-style: none;
     gap: var(--spacing-lg);
+    justify-content: center;
+}
+
+.hamburger {
+    grid-column: 3;
+    justify-self: end;
 }
 
 .nav-link {
@@ -161,6 +177,8 @@ body {
     flex-direction: column;
     gap: 5px;
     cursor: pointer;
+    grid-column: 3;
+    justify-self: end;
 }
 
 .hamburger span {
@@ -375,7 +393,7 @@ section {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: start;
+    align-items: center;
 }
 
 .about-text {
@@ -393,11 +411,10 @@ section {
     font-weight: 400;
 }
 
-.video-title {
-    font-family: var(--font-primary);
-    font-size: 1.5rem;
-    margin-bottom: var(--spacing-md);
-    color: var(--text-primary);
+.about-video {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .video-container {
@@ -405,6 +422,7 @@ section {
     overflow: hidden;
     box-shadow: var(--shadow-lg);
     background: var(--bg-dark);
+    width: 100%;
 }
 
 .video-container video {
@@ -1022,6 +1040,10 @@ section {
    Responsive Design
    =================================== */
 @media (max-width: 768px) {
+    .navbar .container {
+        grid-template-columns: 80px 1fr 80px;
+    }
+
     .nav-menu {
         position: fixed;
         left: -100%;
@@ -1035,6 +1057,7 @@ section {
         box-shadow: var(--shadow-lg);
         padding: var(--spacing-lg);
         gap: var(--spacing-md);
+        grid-column: 1 / -1;
     }
 
     .nav-menu.active {
