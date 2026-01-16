@@ -992,9 +992,9 @@ section {
 }
 
 .chatbot-message.bot {
-    background: #FFFFFF;
+    background: transparent;
     color: #2D2D2D;
-    border: 1px solid #E5E2DE;
+    border: none;
     align-self: flex-start;
 }
 
