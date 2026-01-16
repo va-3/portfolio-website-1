@@ -501,7 +501,7 @@ section {
 
 .about-paragraph {
     font-family: var(--font-secondary);
-    font-size: 1.05rem;
+    font-size: 1.0rem;
     line-height: 1.7;
     color: var(--text-primary);
     text-align: justify;
