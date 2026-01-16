@@ -997,6 +997,7 @@ section {
     color: #2D2D2D;
     border: none;
     align-self: flex-start;
+    text-align: left;
 }
 
 /* Dark mode bot messages - lighter contrasting background */
@@ -1158,7 +1159,7 @@ section {
 
 /* Chat Input Area */
 .chat-card-input {
-    padding: 0 16px 16px 16px;
+    padding: 16px 16px 16px 16px;
     flex-shrink: 0;
     width: 100%;
     box-sizing: border-box;
