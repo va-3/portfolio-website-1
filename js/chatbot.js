@@ -26,6 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
             aiChatCard.classList.add('expanded');
             isExpanded = true;
             console.log('Chat card classes:', aiChatCard.className);
+
+            // Add welcome message
+            addMessage("Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!", 'bot');
         }
     }
 
