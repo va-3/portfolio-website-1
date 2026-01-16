@@ -939,14 +939,14 @@ section {
     padding: 0 1rem 0.5rem 1rem;
     min-height: 0;
     background: #FFFFFF;
-    border: 2px solid var(--primary-color);
+    border: none;
     border-radius: 16px;
     margin: 0.5rem;
 }
 
 [data-theme="dark"] .chat-messages-area {
     background: #1a1625;
-    border-color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
 .chatbot-messages {
