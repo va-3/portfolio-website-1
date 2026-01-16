@@ -1159,12 +1159,16 @@ section {
 .chat-card-input {
     padding: 0 16px 16px 16px;
     flex-shrink: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .chat-input-form {
     display: flex;
     gap: 8px;
     align-items: center;
+    width: 100%;
+    justify-content: center;
 }
 
 .chat-input-field {
