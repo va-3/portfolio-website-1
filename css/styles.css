@@ -941,13 +941,14 @@ section {
     min-height: 0;
     background: #FFFFFF;
     border: none;
-    border-radius: 0;
+    border-radius: 0 0 22px 22px;
     margin: 0;
 }
 
 [data-theme="dark"] .chat-messages-area {
     background: #1a1625;
     border: none;
+    border-radius: 0 0 22px 22px;
 }
 
 .chatbot-messages {
