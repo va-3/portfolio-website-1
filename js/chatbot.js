@@ -12,12 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let isExpanded = false;
 
-    // Initialize Dobby logos
+    // Initialize Dobby logo in header
     if (document.getElementById('header-dobby-logo')) {
         new DobbyLogo('header-dobby-logo', 50);
-    }
-    if (document.getElementById('preview-dobby-avatar')) {
-        new DobbyLogo('preview-dobby-avatar', 28);
     }
 
     // Expand chat on input focus or click
