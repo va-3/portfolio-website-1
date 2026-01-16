@@ -946,7 +946,7 @@ section {
 
 [data-theme="dark"] .chat-messages-area {
     background: #1a1625;
-    border: 2px solid var(--primary-color);
+    border: none;
 }
 
 .chatbot-messages {
