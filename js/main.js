@@ -22,11 +22,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Navbar scroll effect
+    // Navbar scroll effect with throttling
     let lastScroll = 0;
     const navbar = document.querySelector('.navbar');
+    let navbarTicking = false;
 
-    window.addEventListener('scroll', function() {
+    function updateNavbar() {
         const currentScroll = window.pageYOffset;
 
         if (currentScroll <= 0) {
@@ -36,7 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         lastScroll = currentScroll;
-    });
+        navbarTicking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!navbarTicking) {
+            requestAnimationFrame(updateNavbar);
+            navbarTicking = true;
+        }
+    }, { passive: true });
 
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -175,10 +184,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Add active state to current section in nav
+    // Add active state to current section in nav with throttling
     const sections = document.querySelectorAll('section[id]');
+    let navTicking = false;
 
-    window.addEventListener('scroll', function() {
+    function updateActiveNav() {
         let current = '';
 
         // Check if we're at the bottom of the page
@@ -204,7 +214,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.classList.add('active');
             }
         });
-    });
+
+        navTicking = false;
+    }
+
+    window.addEventListener('scroll', function() {
+        if (!navTicking) {
+            requestAnimationFrame(updateActiveNav);
+            navTicking = true;
+        }
+    }, { passive: true });
 
     // Add fade-in animation to sections on load
     setTimeout(() => {
@@ -229,3 +248,68 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+// ===================================
+// TIMELINE DOT SCROLL TRACKING
+// ===================================
+// Cache DOM elements for performance
+let timelineElement = null;
+let dotElement = null;
+let timelineOffsetTop = 0;
+let timelineHeight = 0;
+
+function cacheTimelineElements() {
+    timelineElement = document.querySelector('.timeline');
+    dotElement = document.querySelector('.timeline-dot-animated');
+
+    if (timelineElement) {
+        const rect = timelineElement.getBoundingClientRect();
+        timelineOffsetTop = rect.top + window.scrollY;
+        timelineHeight = rect.height;
+    }
+}
+
+function updateTimelineDot() {
+    if (!timelineElement || !dotElement) return;
+
+    const viewportHeight = window.innerHeight;
+    const scrollY = window.pageYOffset || window.scrollY;
+
+    // Calculate progress through timeline (0 to 1)
+    const scrolledPast = scrollY - timelineOffsetTop + (viewportHeight * 0.3);
+    const progress = Math.max(0, Math.min(1, scrolledPast / timelineHeight));
+
+    // Update dot position using transform for GPU acceleration
+    const newTop = progress * timelineHeight;
+    const scale = progress > 0 && progress < 1 ? 1 : 0.8;
+
+    // Use translate3d for GPU acceleration instead of top property
+    dotElement.style.transform = `translate3d(-50%, ${newTop}px, 0) scale(${scale})`;
+}
+
+// Use requestAnimationFrame for smooth 60fps animation
+let timelineTicking = false;
+function requestTimelineUpdate() {
+    if (!timelineTicking) {
+        requestAnimationFrame(() => {
+            updateTimelineDot();
+            timelineTicking = false;
+        });
+        timelineTicking = true;
+    }
+}
+
+// Recalculate dimensions on resize
+function handleResize() {
+    cacheTimelineElements();
+    updateTimelineDot();
+}
+
+// Initialize and attach event listeners with passive flag for better scroll performance
+document.addEventListener('DOMContentLoaded', () => {
+    cacheTimelineElements();
+    updateTimelineDot();
+});
+
+window.addEventListener('scroll', requestTimelineUpdate, { passive: true });
+window.addEventListener('resize', handleResize);

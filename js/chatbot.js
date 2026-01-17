@@ -11,10 +11,44 @@ document.addEventListener('DOMContentLoaded', function() {
     const collapseBtn = document.getElementById('collapse-chat-btn');
 
     let isExpanded = false;
+    const STORAGE_KEY = 'dobby-chat-history';
 
     // Initialize Dobby logo in header
     if (document.getElementById('header-dobby-logo')) {
         new DobbyLogo('header-dobby-logo', 50);
+    }
+
+    // Load chat history from sessionStorage
+    function loadChatHistory() {
+        try {
+            const savedHistory = sessionStorage.getItem(STORAGE_KEY);
+            if (savedHistory) {
+                const messages = JSON.parse(savedHistory);
+                messages.forEach(msg => {
+                    addMessageWithoutSaving(msg.text, msg.sender);
+                });
+                return true; // History was loaded
+            }
+        } catch (error) {
+            console.error('Error loading chat history:', error);
+        }
+        return false; // No history
+    }
+
+    // Save chat history to sessionStorage
+    function saveChatHistory() {
+        try {
+            const messages = [];
+            chatbotMessages.querySelectorAll('.chatbot-message').forEach(msg => {
+                messages.push({
+                    text: msg.textContent,
+                    sender: msg.classList.contains('bot') ? 'bot' : 'user'
+                });
+            });
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        } catch (error) {
+            console.error('Error saving chat history:', error);
+        }
     }
 
     // Expand chat on input focus or click
@@ -25,8 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
             isExpanded = true;
             console.log('Chat card classes:', aiChatCard.className);
 
-            // Add welcome message
-            addMessage("Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!", 'bot');
+            // Load existing history from sessionStorage or show welcome message
+            const hasHistory = loadChatHistory();
+            if (!hasHistory) {
+                addMessage("Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!", 'bot');
+            }
         }
     }
 
@@ -37,9 +74,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function collapseChat() {
         aiChatCard.classList.remove('expanded');
         isExpanded = false;
-        // Clear messages when collapsing
+        // Clear DOM but keep sessionStorage (will restore on expand)
         chatbotMessages.innerHTML = '';
-        console.log('Chat collapsed');
+        console.log('Chat collapsed, messages saved to storage');
     }
 
     // Add collapse button listener
@@ -75,8 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Add message to chat
-    function addMessage(text, sender) {
+    // Add message to chat WITHOUT saving (used when loading history)
+    function addMessageWithoutSaving(text, sender) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `chatbot-message ${sender}`;
         messageDiv.textContent = text;
@@ -84,6 +121,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Scroll to bottom
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Add message to chat AND save to sessionStorage
+    function addMessage(text, sender) {
+        addMessageWithoutSaving(text, sender);
+        saveChatHistory();
     }
 
     // Show typing indicator

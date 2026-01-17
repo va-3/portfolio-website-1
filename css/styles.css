@@ -484,6 +484,7 @@ section {
 .about-section {
     background: var(--bg-primary);
     padding: var(--spacing-2xl) 0;
+    border-top: 1px solid var(--border-color);
 }
 
 .about-content {
@@ -605,8 +606,12 @@ section {
     max-width: 800px;
     margin: 0 auto var(--spacing-2xl);
     padding-left: 40px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
+/* Timeline gradient line flowing through all cards */
 .timeline::before {
     content: '';
     position: absolute;
@@ -623,21 +628,37 @@ section {
     margin-bottom: var(--spacing-xl);
 }
 
-.timeline-dot {
+.timeline-item:last-child {
+    margin-top: auto;
+    margin-bottom: 0;
+}
+
+/* Animated scroll-tracking dot */
+.timeline-dot-animated {
     position: absolute;
-    left: -31px;
-    top: 5px;
-    width: 16px;
-    height: 16px;
+    left: 16.5px;
+    top: 0;
+    width: 18px;
+    height: 18px;
     background: var(--primary-color);
-    border: 3px solid white;
+    border: 4px solid var(--bg-primary);
     border-radius: 50%;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 0 15px var(--primary-color), var(--shadow-md);
+    z-index: 10;
+    transform: translateX(-50%);
+    will-change: transform;
+    opacity: 1;
+    /* Remove transition to let JS handle smooth animation */
+}
+
+[data-theme="dark"] .timeline-dot-animated {
+    border-color: #1a1625;
+    box-shadow: 0 0 20px rgba(147, 112, 219, 0.6), var(--shadow-md);
 }
 
 .timeline-content {
     background: var(--bg-secondary);
-    padding: var(--spacing-lg);
+    padding: 1.25rem;
     border-radius: 16px;
     box-shadow: var(--card-shadow);
     transition: all var(--transition-base);
@@ -652,49 +673,256 @@ section {
 
 .timeline-title {
     font-family: var(--font-primary);
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     color: var(--text-primary);
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: 0.4rem;
+    text-align: center;
 }
 
 .timeline-date {
-    display: inline-block;
+    display: block;
     color: var(--primary-color);
     font-weight: 600;
-    margin-bottom: var(--spacing-sm);
+    font-size: 0.95rem;
+    margin-bottom: 0.65rem;
+    text-align: center;
 }
 
 .timeline-description {
     color: var(--text-secondary);
-    line-height: 1.7;
+    line-height: 1.52;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+/* Resume Grid Layout */
+.resume-grid {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    gap: 2rem;
+    margin-bottom: var(--spacing-2xl);
+    align-items: stretch; /* Make both columns equal height */
+}
+
+/* Resume PDF Container - Styled as Card */
+.resume-pdf-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 8.5 / 11;
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-base);
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+    z-index: 1;
+    cursor: pointer;
+}
+
+.resume-pdf-container:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px var(--card-shadow);
+    border-color: var(--primary-color);
+    z-index: 2;
+}
+
+/* Inner wrapper for PDF with white background */
+.resume-pdf-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+/* Dark mode PDF wrapper - dark background only, NO filter here */
+[data-theme="dark"] .resume-pdf-inner {
+    background: #1a1625;
+}
+
+.resume-pdf {
+    width: calc(100% + 60px);
+    height: calc(100% + 60px);
+    border: none !important;
+    outline: none !important;
+    margin: -30px !important;
+    padding: 0 !important;
+    display: block;
+    background: white !important;
+    object-fit: contain;
+    position: relative;
+}
+
+/* Remove default borders from object and embed elements */
+.resume-pdf-container object,
+.resume-pdf-container embed {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    width: calc(100% + 60px) !important;
+    height: calc(100% + 60px) !important;
+    margin: -30px !important;
+    position: relative !important;
+}
+
+/* Dark mode - ONLY filter applied to actual PDF object/embed */
+[data-theme="dark"] .resume-pdf-container object,
+[data-theme="dark"] .resume-pdf-container embed {
+    filter: invert(0.92) hue-rotate(180deg) contrast(0.85) brightness(1.1);
+}
+
+/* Resume Fullscreen Modal */
+.resume-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.resume-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.resume-modal-content {
+    position: relative;
+    width: 70vw;
+    max-width: 800px;
+    height: auto;
+    aspect-ratio: 8.5 / 11;
+    max-height: 95vh;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .resume-modal-content {
+    background: #1a1625;
+    border: 2px solid #9370DB;
+}
+
+.modal-resume-pdf {
+    width: calc(100% + 40px);
+    height: calc(100% + 40px);
+    border: none !important;
+    outline: none !important;
+    margin: -20px !important;
+    object-fit: contain;
+    position: relative;
+}
+
+/* Apply clipping to modal PDF object/embed */
+.resume-modal-content object,
+.resume-modal-content embed {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    width: calc(100% + 40px) !important;
+    height: calc(100% + 40px) !important;
+    margin: -20px !important;
+    position: relative !important;
+}
+
+/* Dark mode modal - ONLY filter applied to actual PDF object/embed */
+[data-theme="dark"] .resume-modal-content object,
+[data-theme="dark"] .resume-modal-content embed {
+    filter: invert(0.92) hue-rotate(180deg) contrast(0.85) brightness(1.1);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .resume-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+    }
+
+    .resume-pdf-container {
+        order: -1;
+        height: 500px;
+    }
+
+    .pdf-viewer-wrapper {
+        height: 500px;
+    }
+
+    .timeline {
+        order: 1;
+        height: auto; /* Reset height for mobile */
+        justify-content: flex-start; /* Reset alignment */
+    }
+
+    .timeline-item {
+        margin-bottom: var(--spacing-xl); /* Restore spacing */
+    }
+
+    .resume-modal-content {
+        width: 95%;
+        height: 95vh;
+    }
 }
 
 /* Skills Section */
 .skills-section {
     max-width: 900px;
-    margin: 0 auto;
+    margin: var(--spacing-lg) auto 0;
+}
+
+/* Skills within timeline column */
+.timeline-column .skills-section {
+    margin-top: 1rem;
+    padding-left: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Skills Card - matches timeline card styling */
+.skills-card {
+    background: var(--bg-secondary);
+    padding: var(--spacing-md);
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-base);
+    border: 2px solid var(--border-color);
+}
+
+.skills-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px var(--card-shadow);
+    border-color: var(--primary-color);
 }
 
 .skills-title {
     font-family: var(--font-primary);
-    font-size: 1.75rem;
+    font-size: 1.2rem;
     text-align: center;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 0.75rem;
     color: var(--text-primary);
 }
 
 .skills-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-sm);
+    gap: 0.5rem;
     justify-content: center;
 }
 
 .skill-tag {
     background: var(--bg-secondary);
     color: var(--text-primary);
-    padding: 0.625rem 1.25rem;
+    padding: 0.4rem 0.9rem;
     border-radius: 24px;
+    font-size: 0.85rem;
     font-weight: 500;
     transition: all var(--transition-base);
     cursor: default;
@@ -980,28 +1208,35 @@ section {
     border-radius: 12px;
     max-width: 85%;
     font-family: var(--font-secondary);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     line-height: 1.5;
     word-wrap: break-word;
 }
 
 .chatbot-message.user {
-    background: var(--primary-color);
-    color: white;
+    background: #FFFFFF;
+    color: #2D2D2D;
+    border: 2px solid var(--border-color);
     align-self: flex-end;
     margin-left: auto;
 }
 
 .chatbot-message.bot {
-    background: transparent;
-    color: #2D2D2D;
+    background: #20B2AA;
+    color: #FFFFFF;
     border: none;
     align-self: flex-start;
     text-align: left;
 }
 
-/* Dark mode bot messages - lighter contrasting background */
+/* Dark mode message styling - purple AI, black user */
 [data-theme="dark"] .chatbot-message.bot {
+    background: var(--primary-color);
+    color: #FFFFFF;
+    border: none;
+}
+
+[data-theme="dark"] .chatbot-message.user {
     background: #2a2535;
     color: #E5E5E5;
     border: 1px solid #3a3545;
@@ -1165,6 +1400,11 @@ section {
     flex-shrink: 0;
     width: 100%;
     box-sizing: border-box;
+    background: #FFFFFF;
+}
+
+[data-theme="dark"] .chat-card-input {
+    background: transparent;
 }
 
 .chat-input-form {
