@@ -169,11 +169,19 @@
             <!-- Right: PDF Resume Viewer (60%) -->
             <div class="resume-pdf-container">
                 <div class="resume-pdf-inner">
+                    <!-- Static thumbnail - shows INSTANTLY -->
+                    <img src="images/resume-thumbnail.png"
+                         class="pdf-placeholder"
+                         alt="Resume preview"
+                         id="pdf-placeholder">
+
+                    <!-- PDF loads with visibility hidden, then reveals when ready -->
                     <object
                         data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
                         type="application/pdf"
                         id="resume-iframe"
-                        class="resume-pdf">
+                        class="resume-pdf"
+                        aria-label="Resume PDF Viewer">
                         <embed
                             src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
                             type="application/pdf"
@@ -245,7 +253,8 @@
                 data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
                 type="application/pdf"
                 id="modal-resume-iframe"
-                class="modal-resume-pdf">
+                class="modal-resume-pdf"
+                aria-label="Resume PDF Fullscreen Viewer">
                 <embed
                     src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
                     type="application/pdf"
@@ -268,6 +277,7 @@
     <script src="js/theme.js"></script>
     <script src="js/main.js"></script>
     <script src="js/chatbot.js"></script>
+    <script src="js/pdf-loader.js"></script>
     <script src="js/resume-modal.js"></script>
 </body>
 </html>

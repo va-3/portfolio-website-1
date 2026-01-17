@@ -704,7 +704,30 @@ section {
     align-items: stretch; /* Make both columns equal height */
 }
 
-/* Resume PDF Container - Styled as Card */
+/* ================================================
+   PDF THUMBNAIL PLACEHOLDER
+   ================================================ */
+.pdf-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    z-index: 2;
+    transition: opacity 0.3s ease-out;
+    pointer-events: none;
+}
+
+.pdf-placeholder.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* ================================================
+   RESUME PDF CONTAINER WITH GPU ACCELERATION
+   ================================================ */
 .resume-pdf-container {
     position: relative;
     width: 100%;
@@ -714,15 +737,24 @@ section {
     padding: var(--spacing-lg);
     border-radius: 16px;
     box-shadow: var(--card-shadow);
-    transition: all var(--transition-base);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     border: 2px solid var(--border-color);
     overflow: hidden;
     z-index: 1;
     cursor: pointer;
+
+    /* GPU Acceleration for container */
+    transform: translateZ(0);
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    /* Prevent content from painting during scroll */
+    contain: layout style paint;
 }
 
 .resume-pdf-container:hover {
-    transform: translateY(-4px);
+    transform: translateY(-4px) translateZ(0);
     box-shadow: 0 8px 25px var(--card-shadow);
     border-color: var(--primary-color);
     z-index: 2;
@@ -737,6 +769,10 @@ section {
     border-radius: 8px;
     overflow: hidden;
     pointer-events: none;
+
+    /* GPU layer promotion */
+    transform: translateZ(0);
+    isolation: isolate;
 }
 
 /* Dark mode PDF wrapper - dark background only, NO filter here */
@@ -744,6 +780,9 @@ section {
     background: #1a1625;
 }
 
+/* ================================================
+   PDF LOADING STATE & GPU ACCELERATION
+   ================================================ */
 .resume-pdf {
     width: calc(100% + 60px);
     height: calc(100% + 60px);
@@ -755,9 +794,27 @@ section {
     background: white !important;
     object-fit: contain;
     position: relative;
+
+    /* GPU Acceleration for smooth scrolling */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+
+    /* Smooth rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Initially hidden - reveals when loaded */
+    visibility: hidden;
+    z-index: 1;
 }
 
-/* Remove default borders from object and embed elements */
+.resume-pdf.loaded {
+    visibility: visible;
+    z-index: 3;
+}
+
+/* Scroll performance optimization */
 .resume-pdf-container object,
 .resume-pdf-container embed {
     border: none !important;
@@ -767,6 +824,10 @@ section {
     height: calc(100% + 60px) !important;
     margin: -30px !important;
     position: relative !important;
+
+    /* Prevent repaints during scroll */
+    contain: strict;
+    content-visibility: auto;
 }
 
 /* Dark mode - ONLY filter applied to actual PDF object/embed */
