@@ -4,3 +4,11 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# PDF serving optimization
+[[headers]]
+  for = "/images/vishnu-a-resume.pdf"
+  [headers.values]
+    Content-Type = "application/pdf"
+    Cache-Control = "public, max-age=31536000, immutable"
+    Content-Disposition = "inline; filename=\"vishnu-a-resume.pdf\""
