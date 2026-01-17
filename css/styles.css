@@ -491,7 +491,26 @@ section {
     display: grid;
     grid-template-columns: 1.85fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: start;
+    align-items: stretch;
+}
+
+/* About Text Card - matches timeline card styling */
+.about-text-card {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: all var(--transition-base);
+    border: 2px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.about-text-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px var(--card-shadow);
+    border-color: var(--primary-color);
 }
 
 .about-text {
@@ -502,8 +521,8 @@ section {
 
 .about-paragraph {
     font-family: var(--font-secondary);
-    font-size: 1.0rem;
-    line-height: 1.7;
+    font-size: 0.95rem;
+    line-height: 1.65;
     color: var(--text-primary);
     text-align: justify;
     font-weight: 400;
@@ -512,7 +531,8 @@ section {
 .about-video {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
+    height: 100%;
 }
 
 .video-container {
@@ -520,10 +540,13 @@ section {
     overflow: hidden;
     box-shadow: var(--card-shadow);
     background: var(--bg-secondary);
-    width: 110%;
-    max-width: 110%;
+    width: 125%;
+    max-width: 125%;
     border: 2px solid var(--border-color);
     transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .video-container:hover {
@@ -534,7 +557,8 @@ section {
 
 .video-container video {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
