@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Load existing history from sessionStorage or show welcome message
             const hasHistory = loadChatHistory();
             if (!hasHistory) {
-                addMessage("Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!", 'bot');
+                addMessage("I'm here to help. How can I assist you with questions about Vishnu's skills, experience, and projects?", 'bot');
             }
 
             // Reset scroll position to top when opening modal
@@ -150,13 +150,10 @@ document.addEventListener('DOMContentLoaded', function() {
         saveChatHistory();
     }
 
-    // Show typing indicator with iMessage-style dots
+    // Show typing indicator with animated dots in placeholder
     function showTypingIndicator() {
         chatbotInput.classList.add('typing');
-        chatbotInput.placeholder = 'Dobby is typing...';
-        if (typingDots) {
-            typingDots.classList.add('active');
-        }
+        chatbotInput.placeholder = '● ● ●'; // Unicode dots that will be animated by CSS
         chatbotInput.disabled = true; // Prevent typing while AI responds
     }
 
@@ -164,9 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function hideTypingIndicator() {
         chatbotInput.classList.remove('typing');
         chatbotInput.placeholder = 'Ask me anything...';
-        if (typingDots) {
-            typingDots.classList.remove('active');
-        }
         chatbotInput.disabled = false; // Re-enable input
         chatbotInput.focus(); // Return focus to input
     }
