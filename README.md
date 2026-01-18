@@ -128,7 +128,7 @@ The portfolio features an intelligent fullscreen chatbot named "Dobby" that can 
 - Comprehensive 140-line system prompt with 6 response examples
 - Session management for conversation context
 - First-person responses (40-60 words, concise and impact-driven)
-- Optimized layout with bottom-anchored messages for consistent UX
+- Optimized layout with natural top-to-bottom message flow and smooth scroll behavior
 - Session storage for conversation persistence
 - TheraBridge-inspired design (teal in light mode, purple in dark mode)
 
@@ -245,7 +245,7 @@ Edit `css/styles.css` and update CSS variables:
 ## 🔄 Recent Updates
 
 ### January 2026
-- **Chatbot UX Enhancement**: Fixed layout inconsistency - messages now anchor to bottom for consistent spacing
+- **Chatbot UX Enhancement**: Fixed layout with natural top-to-bottom chat flow, scroll-to-top on logo click, and smooth auto-scroll
 - **Gallery Refresh**: Updated photo gallery with new professional and personal images
 - **CSS Optimization**: Improved flexbox layout for chat messages container
 - **Theme System**: Light/dark mode with TheraBridge-inspired color palette

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
     const collapseBtn = document.getElementById('collapse-chat-btn');
+    const dobbyBranding = document.querySelector('.dobby-branding');
 
     let isExpanded = false;
     const STORAGE_KEY = 'dobby-chat-history';
@@ -64,11 +65,27 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!hasHistory) {
                 addMessage("Hi! I'm Dobby, your AI assistant. Ask me about Vishnu's skills and experience!", 'bot');
             }
+
+            // Reset scroll position to top when opening modal
+            chatbotMessages.scrollTop = 0;
         }
     }
 
     chatbotInput.addEventListener('focus', expandChat);
     chatbotInput.addEventListener('click', expandChat);
+
+    // Scroll to top when clicking Dobby branding/logo
+    if (dobbyBranding && chatbotMessages) {
+        // Add cursor pointer to show it's clickable
+        dobbyBranding.style.cursor = 'pointer';
+
+        dobbyBranding.addEventListener('click', function() {
+            chatbotMessages.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
 
     // Collapse chat function
     function collapseChat() {
@@ -119,8 +136,11 @@ document.addEventListener('DOMContentLoaded', function() {
         messageDiv.textContent = text;
         chatbotMessages.appendChild(messageDiv);
 
-        // Scroll to bottom
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        // Smooth scroll to bottom to show new message
+        chatbotMessages.scrollTo({
+            top: chatbotMessages.scrollHeight,
+            behavior: 'smooth'
+        });
     }
 
     // Add message to chat AND save to sessionStorage
