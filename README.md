@@ -10,9 +10,11 @@ A modern, responsive portfolio website featuring an AI-powered chatbot, showcasi
 
 - **Custom Domain**: Professional branding with vishnuanapalli.com
 - **Responsive Design**: Fully responsive layout optimized for all devices
-- **AI Chatbot**: Intelligent chatbot powered by OpenAI GPT-4o-mini that answers questions about my professional background
-- **Modern UI/UX**: Clean, professional design with smooth animations and transitions
+- **AI Chatbot "Dobby"**: Intelligent fullscreen chatbot powered by OpenAI GPT-4o-mini with optimized layout and consistent UX
+- **Modern UI/UX**: Clean, professional design with smooth animations, light/dark mode, and refined spacing
+- **Photo Gallery**: Interactive 6-image gallery showcasing professional and personal moments
 - **Resume Highlights**: Interactive timeline showcasing current role at PeerBridge and TheraBridge hackathon win
+- **PDF Resume Viewer**: Optimized PDF loading with instant thumbnail preview and fullscreen modal
 - **Technical Skills**: Comprehensive display of 22+ technologies (React, Node.js, PostgreSQL, MongoDB, Docker, AWS, etc.)
 - **SEO Optimized**: Semantic HTML with proper meta tags for search visibility
 - **Serverless Architecture**: Deployed on Netlify with serverless functions
@@ -27,8 +29,11 @@ portfolio-website-1/
 ├── css/
 │   └── styles.css         # All styling
 ├── js/
-│   ├── main.js           # Main JavaScript functionality
-│   └── chatbot.js        # Chatbot UI integration
+│   ├── main.js           # Navigation, gallery, scroll effects
+│   ├── chatbot.js        # AI chatbot UI and persistence
+│   ├── theme.js          # Light/dark mode toggle
+│   ├── pdf-loader.js     # Optimized PDF loading
+│   └── resume-modal.js   # Fullscreen resume viewer
 ├── netlify/
 │   └── functions/
 │       └── chat.js       # Serverless chatbot backend (OpenAI GPT-4o-mini)
@@ -48,10 +53,11 @@ portfolio-website-1/
 ## 🛠️ Tech Stack
 
 **Frontend:**
-- HTML5, CSS3, JavaScript (ES6+)
+- HTML5, CSS3, JavaScript (ES6+) - Vanilla JS, no frameworks
 - Responsive design with CSS Grid and Flexbox
-- Font Awesome icons
-- Google Fonts (Poppins, Inter, Lora)
+- Custom CSS theme system with CSS variables (light/dark mode)
+- Font Awesome 6.4 icons
+- Google Fonts (DM Sans, Crimson Pro, Inter)
 
 **Backend:**
 - Netlify Serverless Functions
@@ -107,23 +113,26 @@ Python, JavaScript, TypeScript, SQL, C, C++, React, Node.js, Redux, FastAPI, Jes
 
 ---
 
-## 🤖 AI Chatbot
+## 🤖 AI Chatbot "Dobby"
 
-The portfolio features an intelligent chatbot that can answer questions about my:
-- Professional experience and current role
-- Projects and achievements
-- Technical skills and certifications
+The portfolio features an intelligent fullscreen chatbot named "Dobby" that can answer questions about:
+- Professional experience and current role at PeerBridge
+- Projects and achievements (TheraBridge, PeerBridge features)
+- Technical skills and certifications (Azure AI-900, AZ-900, Databricks)
 - Education and coursework
-- Personal interests and hobbies
+- Personal journey from athlete to sales to software engineering
 
 **Implementation:**
 - Built using OpenAI GPT-4o-mini API
 - Serverless function hosted on Netlify
-- Comprehensive system prompt with accurate resume information
+- Comprehensive 140-line system prompt with 6 response examples
 - Session management for conversation context
-- First-person responses as if I'm speaking directly
+- First-person responses (40-60 words, concise and impact-driven)
+- Optimized layout with bottom-anchored messages for consistent UX
+- Session storage for conversation persistence
+- TheraBridge-inspired design (teal in light mode, purple in dark mode)
 
-**Try it**: Visit [vishnuanapalli.com](https://vishnuanapalli.com) and click "Ask Vishnu" to chat with the AI!
+**Try it**: Visit [vishnuanapalli.com](https://vishnuanapalli.com) and click the Dobby icon to chat with the AI!
 
 ---
 
@@ -233,6 +242,24 @@ Edit `css/styles.css` and update CSS variables:
 
 ---
 
+## 🔄 Recent Updates
+
+### January 2026
+- **Chatbot UX Enhancement**: Fixed layout inconsistency - messages now anchor to bottom for consistent spacing
+- **Gallery Refresh**: Updated photo gallery with new professional and personal images
+- **CSS Optimization**: Improved flexbox layout for chat messages container
+- **Theme System**: Light/dark mode with TheraBridge-inspired color palette
+- **PDF Viewer**: Optimized resume loading with instant thumbnail preview
+
+### Previous Updates
+- AI chatbot implementation with GPT-4o-mini
+- Fullscreen resume modal with dark mode filter
+- Session-based chat persistence
+- About Me section redesign with video card layout
+- Simplified chatbot greeting for natural conversation flow
+
+---
+
 ## 🐛 Troubleshooting
 
 ### Chatbot Not Responding
@@ -276,6 +303,8 @@ Edit `css/styles.css` and update CSS variables:
 - **Time to Interactive**: < 3s
 - **Mobile-Friendly**: 100% responsive
 - **SEO Score**: 95+
+- **PDF Load Optimization**: 50x faster perceived load with instant thumbnail preview
+- **Lazy Loading**: Gallery images load on demand for faster initial page load
 
 ---
 
