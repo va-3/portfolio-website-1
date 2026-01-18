@@ -149,16 +149,19 @@ document.addEventListener('DOMContentLoaded', function() {
         saveChatHistory();
     }
 
-    // Show typing indicator
+    // Show typing indicator in input placeholder
     function showTypingIndicator() {
-        typingIndicator.classList.add('active');
-        // Scroll to show typing indicator
-        typingIndicator.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        chatbotInput.classList.add('typing');
+        chatbotInput.placeholder = 'Dobby is typing...';
+        chatbotInput.disabled = true; // Prevent typing while AI responds
     }
 
-    // Hide typing indicator
+    // Hide typing indicator and restore placeholder
     function hideTypingIndicator() {
-        typingIndicator.classList.remove('active');
+        chatbotInput.classList.remove('typing');
+        chatbotInput.placeholder = 'Ask me anything...';
+        chatbotInput.disabled = false; // Re-enable input
+        chatbotInput.focus(); // Return focus to input
     }
 
     // Session ID for conversation continuity
