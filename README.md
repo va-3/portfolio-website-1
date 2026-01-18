@@ -127,8 +127,10 @@ The portfolio features an intelligent fullscreen chatbot named "Dobby" that can 
 - Serverless function hosted on Netlify
 - Comprehensive 140-line system prompt with 6 response examples
 - Session management for conversation context
-- First-person responses (40-60 words, concise and impact-driven)
-- Optimized layout with natural top-to-bottom message flow and smooth scroll behavior
+- Third-person responses (40-60 words, professional and concise)
+- iMessage-style animated typing dots (teal/purple based on theme)
+- Compact card widget with fixed height (550px)
+- Optimized layout with natural top-to-bottom message flow
 - Session storage for conversation persistence
 - TheraBridge-inspired design (teal in light mode, purple in dark mode)
 

@@ -1227,11 +1227,11 @@ section {
 
 /* Expanded State - Compact Card Widget */
 .ai-chat-card.expanded {
-    height: 550px;
+    height: 550px !important; /* Fixed height - never grows */
     max-height: 80vh; /* Prevent overflow on smaller screens */
     cursor: default;
     position: relative;
-    overflow: visible;
+    overflow: hidden; /* Prevent content from spilling outside */
 }
 
 .ai-chat-card.expanded:hover {
@@ -1335,28 +1335,63 @@ section {
     display: none;
 }
 
-/* Input field typing state with animated placeholder */
-.chat-input-field.typing {
-    position: relative;
+/* iMessage-style typing dots container */
+.typing-dots-container {
+    display: none; /* Hidden by default */
+    align-items: center;
+    gap: 4px;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
 
-.chat-input-field.typing::placeholder {
-    color: #20B2AA; /* Teal in light mode */
-    font-weight: 500;
-    animation: pulse 1.5s ease-in-out infinite;
+.typing-dots-container.active {
+    display: flex;
 }
 
-[data-theme="dark"] .chat-input-field.typing::placeholder {
-    color: #B794D4; /* Purple in dark mode */
+/* Individual typing dots */
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #20B2AA; /* Teal in light mode */
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out;
 }
 
-@keyframes pulse {
-    0%, 100% {
-        opacity: 0.6;
+[data-theme="dark"] .typing-dot {
+    background: #B794D4; /* Purple in dark mode */
+}
+
+/* Stagger the animation for each dot (iMessage effect) */
+.typing-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Bounce animation (iMessage style) */
+@keyframes bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.7;
     }
-    50% {
+    30% {
+        transform: translateY(-10px);
         opacity: 1;
     }
+}
+
+/* Hide placeholder when typing dots are shown */
+.chat-input-field.typing::placeholder {
+    opacity: 0;
 }
 
 /* Header */

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatbotInput = document.getElementById('chatbot-input');
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
+    const typingDots = document.getElementById('typing-dots');
     const collapseBtn = document.getElementById('collapse-chat-btn');
     const dobbyBranding = document.querySelector('.dobby-branding');
 
@@ -149,10 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         saveChatHistory();
     }
 
-    // Show typing indicator in input placeholder
+    // Show typing indicator with iMessage-style dots
     function showTypingIndicator() {
         chatbotInput.classList.add('typing');
         chatbotInput.placeholder = 'Dobby is typing...';
+        if (typingDots) {
+            typingDots.classList.add('active');
+        }
         chatbotInput.disabled = true; // Prevent typing while AI responds
     }
 
@@ -160,6 +164,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function hideTypingIndicator() {
         chatbotInput.classList.remove('typing');
         chatbotInput.placeholder = 'Ask me anything...';
+        if (typingDots) {
+            typingDots.classList.remove('active');
+        }
         chatbotInput.disabled = false; // Re-enable input
         chatbotInput.focus(); // Return focus to input
     }
