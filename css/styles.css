@@ -1340,7 +1340,8 @@ section {
 .chat-input-field.typing::placeholder {
     color: #20B2AA; /* Teal in light mode */
     font-weight: 600;
-    font-size: 14px; /* Smaller dots */
+    font-size: 12px; /* Smaller dots */
+    letter-spacing: 3px; /* Space out the dots */
     animation: typingBounce 1.4s infinite ease-in-out;
 }
 
@@ -1349,14 +1350,19 @@ section {
 }
 
 /* iPhone iMessage-style bouncing animation for typing dots */
+/* Note: transform doesn't work on ::placeholder, so we use opacity + letter-spacing for wave effect */
 @keyframes typingBounce {
-    0%, 60%, 100% {
-        opacity: 0.4;
-        transform: translateY(0);
+    0%, 100% {
+        opacity: 0.3;
+        letter-spacing: 3px;
     }
-    30% {
+    33% {
         opacity: 1;
-        transform: translateY(-4px); /* Bounce up */
+        letter-spacing: 4px;
+    }
+    66% {
+        opacity: 0.6;
+        letter-spacing: 3px;
     }
 }
 
