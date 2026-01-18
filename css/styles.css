@@ -1339,21 +1339,24 @@ section {
 /* iMessage-style typing indicator in placeholder */
 .chat-input-field.typing::placeholder {
     color: #20B2AA; /* Teal in light mode */
-    font-weight: 500;
-    animation: typingPulse 1.4s infinite ease-in-out;
+    font-weight: 600;
+    font-size: 14px; /* Smaller dots */
+    animation: typingBounce 1.4s infinite ease-in-out;
 }
 
 [data-theme="dark"] .chat-input-field.typing::placeholder {
     color: #B794D4; /* Purple in dark mode */
 }
 
-/* Pulsing animation for typing placeholder */
-@keyframes typingPulse {
-    0%, 100% {
+/* iPhone iMessage-style bouncing animation for typing dots */
+@keyframes typingBounce {
+    0%, 60%, 100% {
         opacity: 0.4;
+        transform: translateY(0);
     }
-    50% {
+    30% {
         opacity: 1;
+        transform: translateY(-4px); /* Bounce up */
     }
 }
 
