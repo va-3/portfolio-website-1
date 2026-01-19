@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Load existing history from sessionStorage or show welcome message
             const hasHistory = loadChatHistory();
             if (!hasHistory) {
-                addMessage("I'm here to help. How can I assist you with questions about Vishnu's skills, experience, and projects?", 'bot');
+                addMessage("How can I assist you with questions about Vishnu's skills, experience, and projects?", 'bot');
             }
 
             // Reset scroll position to top when opening modal
@@ -157,6 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
             typingDots.style.display = 'flex'; // Show the dots
         }
         chatbotInput.value = ''; // Clear any text
+        chatbotInput.placeholder = ''; // Hide placeholder text while AI is thinking
         chatbotInput.disabled = true; // Prevent typing while AI responds
     }
 
@@ -166,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typingDots) {
             typingDots.style.display = 'none'; // Hide the dots
         }
+        chatbotInput.placeholder = 'Ask me anything...'; // Restore placeholder text
         chatbotInput.disabled = false; // Re-enable input
         chatbotInput.focus(); // Return focus to input
     }

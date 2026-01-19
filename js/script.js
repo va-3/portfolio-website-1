@@ -64,7 +64,7 @@ window.addEventListener('scroll', () => {
     }
 
     lastScroll = currentScroll;
-});
+}, { passive: true });
 
 // ===================================
 // ACTIVE NAVIGATION LINK HIGHLIGHTING
@@ -91,7 +91,7 @@ function highlightNavigation() {
     });
 }
 
-window.addEventListener('scroll', highlightNavigation);
+window.addEventListener('scroll', highlightNavigation, { passive: true });
 window.addEventListener('load', highlightNavigation);
 
 // ===================================
@@ -141,7 +141,7 @@ function requestTimelineUpdate() {
 }
 
 // Attach event listeners for timeline dot
-window.addEventListener('scroll', requestTimelineUpdate);
+window.addEventListener('scroll', requestTimelineUpdate, { passive: true });
 window.addEventListener('resize', updateTimelineDot);
 document.addEventListener('DOMContentLoaded', updateTimelineDot);
 
@@ -291,7 +291,7 @@ function debounce(func, wait = 10, immediate = true) {
 }
 
 // Apply debounce to scroll-heavy functions
-window.addEventListener('scroll', debounce(highlightNavigation, 10));
+window.addEventListener('scroll', debounce(highlightNavigation, 10), { passive: true });
 
 // ===================================
 // ACCESSIBILITY ENHANCEMENTS
