@@ -1362,6 +1362,8 @@ section {
     padding: 0.5rem 1rem;
     scrollbar-width: thin;
     scrollbar-color: var(--border-color) transparent;
+    box-sizing: border-box; /* Include padding in height calculation */
+    min-height: 0; /* Prevent flexbox from expanding */
 }
 
 .chatbot-messages::-webkit-scrollbar {
