@@ -348,20 +348,20 @@ body {
     font-size: 3.5rem;
     font-weight: 700;
     line-height: 1.2;
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs); /* Reduced to bring "Learning, Building, Leading" closer to name */
     color: var(--text-primary);
 }
 
 .hero-subtitle {
-    font-size: 1.25rem;
-    margin-bottom: var(--spacing-sm);
+    font-size: 1.35rem; /* Increased from 1.25rem for slightly more emphasis */
+    margin-bottom: 0.4rem; /* Reduced to bring roles line closer */
     color: var(--primary-color);
     font-weight: 500;
 }
 
 /* Secondary roles line - smaller, subtle */
 .hero-roles {
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Reduced from 0.95rem for better hierarchy */
     margin-bottom: var(--spacing-xl);
     color: var(--text-secondary);
     font-weight: 400;
@@ -507,7 +507,7 @@ section {
 /* About Text Card - matches timeline card styling */
 .about-text-card {
     background: var(--bg-secondary);
-    padding: 2rem; /* Increased from 1.5rem for better breathing room */
+    padding: 1.5rem; /* Reduced padding for less vertical height */
     border-radius: 16px;
     box-shadow: var(--card-shadow);
     transition: all var(--transition-base);
@@ -527,13 +527,13 @@ section {
 .about-text {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Increased from var(--spacing-md) for better paragraph separation */
+    gap: 1rem; /* Reduced gap between paragraphs for less vertical space */
 }
 
 .about-paragraph {
     font-family: var(--font-secondary);
-    font-size: 1.1rem; /* Increased from 0.95rem for optimal readability */
-    line-height: 1.8; /* Increased from 1.65 for better breathing space */
+    font-size: 1rem; /* Reduced from 1.1rem for more compact appearance */
+    line-height: 1.65; /* Reduced from 1.8 for less vertical height */
     color: var(--text-primary);
     text-align: justify;
     font-weight: 400;
