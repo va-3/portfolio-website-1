@@ -150,17 +150,22 @@ document.addEventListener('DOMContentLoaded', function() {
         saveChatHistory();
     }
 
-    // Show typing indicator with animated dots in placeholder
+    // Show typing indicator with animated dots inside input field
     function showTypingIndicator() {
-        chatbotInput.classList.add('typing');
-        chatbotInput.placeholder = '● ● ●'; // Unicode dots that will be animated by CSS
+        const typingDots = document.getElementById('typing-dots');
+        if (typingDots) {
+            typingDots.style.display = 'flex'; // Show the dots
+        }
+        chatbotInput.value = ''; // Clear any text
         chatbotInput.disabled = true; // Prevent typing while AI responds
     }
 
-    // Hide typing indicator and restore placeholder
+    // Hide typing indicator and restore input
     function hideTypingIndicator() {
-        chatbotInput.classList.remove('typing');
-        chatbotInput.placeholder = 'Ask me anything...';
+        const typingDots = document.getElementById('typing-dots');
+        if (typingDots) {
+            typingDots.style.display = 'none'; // Hide the dots
+        }
         chatbotInput.disabled = false; // Re-enable input
         chatbotInput.focus(); // Return focus to input
     }

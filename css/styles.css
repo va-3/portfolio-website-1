@@ -497,13 +497,14 @@ section {
 /* About Text Card - matches timeline card styling */
 .about-text-card {
     background: var(--bg-secondary);
-    padding: 1.5rem;
+    padding: 2rem; /* Increased from 1.5rem for better breathing room */
     border-radius: 16px;
     box-shadow: var(--card-shadow);
     transition: all var(--transition-base);
     border: 2px solid var(--border-color);
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Center text vertically to match video alignment */
     height: 100%;
 }
 
@@ -516,16 +517,22 @@ section {
 .about-text {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: 1.5rem; /* Increased from var(--spacing-md) for better paragraph separation */
 }
 
 .about-paragraph {
     font-family: var(--font-secondary);
-    font-size: 0.95rem;
-    line-height: 1.65;
+    font-size: 1.1rem; /* Increased from 0.95rem for optimal readability */
+    line-height: 1.8; /* Increased from 1.65 for better breathing space */
     color: var(--text-primary);
     text-align: justify;
     font-weight: 400;
+    letter-spacing: 0.01em; /* Professional letter-spacing for crisp readability */
+}
+
+/* First paragraph emphasis for visual hierarchy */
+.about-paragraph:first-child {
+    font-weight: 500;
 }
 
 .about-video {
@@ -1336,39 +1343,56 @@ section {
     display: none;
 }
 
-/* iMessage-style typing indicator in placeholder */
-.chat-input-field.typing::placeholder {
-    color: #20B2AA; /* Teal in light mode */
-    font-weight: 600;
-    font-size: 12px; /* Smaller dots */
-    letter-spacing: 3px; /* Space out the dots */
-    animation: typingBounce 1.4s infinite ease-in-out;
-}
-
-[data-theme="dark"] .chat-input-field.typing::placeholder {
-    color: #B794D4; /* Purple in dark mode */
-}
-
-/* iPhone iMessage-style bouncing animation for typing dots */
-/* Note: transform doesn't work on ::placeholder, so we use opacity + letter-spacing for wave effect */
-@keyframes typingBounce {
-    0%, 100% {
-        opacity: 0.3;
-        letter-spacing: 3px;
-    }
-    33% {
-        opacity: 1;
-        letter-spacing: 4px;
-    }
-    66% {
-        opacity: 0.6;
-        letter-spacing: 3px;
-    }
-}
-
-/* Legacy typing dots container - hidden (kept for backwards compatibility) */
+/* Typing dots container - positioned inside input field */
 .typing-dots-container {
-    display: none !important;
+    display: none; /* Hidden by default, shown via JavaScript */
+    position: absolute;
+    left: 16px; /* Align with input padding */
+    top: 50%;
+    transform: translateY(-50%);
+    gap: 4px;
+    align-items: center;
+    pointer-events: none; /* Don't block input interactions */
+    z-index: 10;
+}
+
+/* Individual typing dot styling */
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #20B2AA; /* Teal in light mode */
+    animation: continuousWaveBounce 1.2s infinite ease-in-out;
+}
+
+/* Dark mode dot color */
+[data-theme="dark"] .typing-dot {
+    background-color: #B794D4; /* Purple in dark mode */
+}
+
+/* Staggered animation delays for continuous wave effect */
+.typing-dot:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+/* Continuous wave bounce animation - each dot bounces independently */
+@keyframes continuousWaveBounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-10px); /* High bounce for dramatic effect */
+        opacity: 1;
+    }
 }
 
 /* Header */
@@ -1497,6 +1521,7 @@ section {
     align-items: center;
     width: 100%;
     justify-content: center;
+    position: relative; /* Needed for absolute positioning of typing dots */
 }
 
 .chat-input-field {
