@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typingDots) {
             typingDots.style.display = 'none'; // Hide the dots
         }
-        chatbotInput.placeholder = 'Ask me anything...'; // Restore placeholder text
+        chatbotInput.placeholder = 'How can I help you today?'; // Restore placeholder text
         chatbotInput.disabled = false; // Re-enable input
         chatbotInput.focus(); // Return focus to input
     }

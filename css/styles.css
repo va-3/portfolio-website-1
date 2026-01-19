@@ -1343,8 +1343,10 @@ section {
     margin: 0;
     box-sizing: border-box; /* Include padding in height calculation */
 
-    /* Explicit height lock for expanded state - prevents expansion */
-    max-height: 398px; /* 550px total - 74px header - 78px input = 398px for messages */
+    /* Triple lock to prevent expansion - 550px total - 74px header - 78px input = 398px */
+    height: 398px !important;
+    min-height: 398px !important;
+    max-height: 398px !important;
 }
 
 [data-theme="dark"] .chat-messages-area {
@@ -1484,8 +1486,11 @@ section {
     justify-content: center;
     position: relative;
     flex-shrink: 0; /* Prevent header from shrinking */
-    min-height: 74px; /* Fixed header height */
-    max-height: 74px; /* Lock header height */
+
+    /* Triple lock to prevent any height changes */
+    height: 74px !important;
+    min-height: 74px !important;
+    max-height: 74px !important;
     box-sizing: border-box; /* Include padding in height */
 }
 
@@ -1594,9 +1599,10 @@ section {
     box-sizing: border-box;
     background: #FFFFFF;
 
-    /* Explicit height lock - prevents expansion */
-    min-height: 78px; /* Fixed input area height */
-    max-height: 78px; /* Lock input area height */
+    /* Triple lock to prevent any height changes */
+    height: 78px !important;
+    min-height: 78px !important;
+    max-height: 78px !important;
 }
 
 [data-theme="dark"] .chat-card-input {
