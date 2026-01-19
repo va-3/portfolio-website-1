@@ -354,9 +354,19 @@ body {
 
 .hero-subtitle {
     font-size: 1.25rem;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-sm);
     color: var(--primary-color);
     font-weight: 500;
+}
+
+/* Secondary roles line - smaller, subtle */
+.hero-roles {
+    font-size: 0.95rem;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-secondary);
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 0.02em;
 }
 
 .hero-cta {
