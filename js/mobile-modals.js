@@ -303,7 +303,7 @@ function initNavigationHandlers() {
             if (isAnyModalOpen() && !isChatOpen()) {
                 e.preventDefault();
                 const openModal = getOpenModal();
-                closeModal(openModal, true); // Close and scroll to top
+                closeModal(openModal, false); // Close and restore scroll position
             }
             // If chat is open or no modal is open, let chatbot.js or default behavior handle it
         });

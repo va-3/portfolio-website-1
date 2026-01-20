@@ -2474,6 +2474,12 @@ section {
     max-width: 100%;
 }
 
+/* Hide "Tap for details" indicators in fullscreen modals */
+.fullscreen-modal.active .about-text-card::after,
+.fullscreen-modal.active .timeline-content::after {
+    display: none !important;
+}
+
 /* About Me Modal Specific Styles */
 
 /* Native fullscreen video styling - prevents zoom/crop on mobile */
