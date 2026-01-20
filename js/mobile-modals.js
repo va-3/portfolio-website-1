@@ -203,7 +203,7 @@ function openModal(modal) {
 /**
  * Generic modal close function
  */
-function closeModal(modal) {
+function closeModal(modal, scrollToTop = false) {
     modal.classList.remove('active');
 
     // Reset modal open state
@@ -216,7 +216,16 @@ function closeModal(modal) {
     document.body.style.left = '';
     document.body.style.right = '';
     document.body.style.overflow = '';
-    window.scrollTo(0, parseInt(scrollY));
+
+    // Either scroll to top or restore previous position
+    if (scrollToTop) {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    } else {
+        window.scrollTo(0, parseInt(scrollY));
+    }
 
     // Restore focus
     if (previousFocus) {
@@ -259,6 +268,73 @@ function initModalControls() {
                 }
             });
         }
+    });
+
+    // Navigation link handlers (home button and nav links)
+    initNavigationHandlers();
+}
+
+/**
+ * Initialize navigation handlers for navbar links
+ * Handles home button and nav links when modals are open
+ */
+function initNavigationHandlers() {
+    // Helper function to check if any modal is open
+    const isAnyModalOpen = () => {
+        return Object.values(modals).some(modal => modal.classList.contains('active'));
+    };
+
+    // Helper function to get the currently open modal
+    const getOpenModal = () => {
+        return Object.values(modals).find(modal => modal.classList.contains('active'));
+    };
+
+    // Helper to check if Dobby chat is open
+    const isChatOpen = () => {
+        const chatCard = document.getElementById('ai-chat-card');
+        return chatCard && chatCard.classList.contains('expanded');
+    };
+
+    // Home button handler
+    const navHomeButton = document.querySelector('.home-link');
+    if (navHomeButton) {
+        navHomeButton.addEventListener('click', function(e) {
+            // Only handle if a fullscreen modal is open AND chat is not open
+            if (isAnyModalOpen() && !isChatOpen()) {
+                e.preventDefault();
+                const openModal = getOpenModal();
+                closeModal(openModal, true); // Close and scroll to top
+            }
+            // If chat is open or no modal is open, let chatbot.js or default behavior handle it
+        });
+    }
+
+    // Navigation links handler (About, Experience, Gallery, Contact)
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Only handle if a fullscreen modal is open AND chat is not open
+            if (isAnyModalOpen() && !isChatOpen()) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const openModal = getOpenModal();
+
+                // Close modal first
+                closeModal(openModal);
+
+                // After modal closes, scroll to target section
+                setTimeout(() => {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 100);
+            }
+            // If chat is open or no modal is open, let chatbot.js or default behavior handle it
+        });
     });
 }
 

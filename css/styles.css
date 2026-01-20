@@ -2359,7 +2359,7 @@ section {
     width: 100%;
     height: 100vh; /* Fallback */
     height: 100svh; /* Small viewport height - stable, best for modals */
-    z-index: 9999;
+    z-index: 10000;
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s ease, visibility 0.3s ease;

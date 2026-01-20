@@ -161,21 +161,37 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Chat collapsed, messages saved to storage');
     }
 
+    // Helper to check if any fullscreen modal is open
+    const isFullscreenModalOpen = () => {
+        const modals = document.querySelectorAll('.fullscreen-modal');
+        return Array.from(modals).some(modal => modal.classList.contains('active'));
+    };
+
     // Add navbar home button listener to close chat if open
     const navHomeButton = document.querySelector('.home-link');
     if (navHomeButton) {
         navHomeButton.addEventListener('click', function(e) {
-            if (isExpanded) {
+            // Only handle if chat is open AND no fullscreen modal is open
+            if (isExpanded && !isFullscreenModalOpen()) {
                 e.preventDefault(); // Prevent default anchor behavior
                 collapseChat(); // Close the chat
+                // Scroll to top after closing chat
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            } else if (!isExpanded && !isFullscreenModalOpen()) {
+                // No chat or modal open, allow default scroll to top
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }, 0);
             }
-            // Scroll to top after closing chat or if already closed
-            setTimeout(() => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }, isExpanded ? 100 : 0);
+            // If fullscreen modal is open, let mobile-modals.js handle it
         });
     }
 
@@ -183,7 +199,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            if (isExpanded) {
+            // Only handle if chat is open AND no fullscreen modal is open
+            if (isExpanded && !isFullscreenModalOpen()) {
                 e.preventDefault(); // Prevent default anchor behavior
                 const targetId = this.getAttribute('href'); // Get the href (e.g., #about)
                 collapseChat(); // Close the chat first
@@ -199,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }, 100);
             }
-            // If chat is not expanded, let the default anchor behavior work
+            // If fullscreen modal is open or chat not open, let other handlers or default behavior work
         });
     });
 
