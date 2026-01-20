@@ -4,6 +4,12 @@
 
 [build.environment]
   NODE_VERSION = "20.11.0"
+  # Disable mise's idiomatic version file detection to prevent installing Python/Ruby/Go
+  MISE_IDIOMATIC_VERSION_FILE = "false"
+  # Skip unnecessary language installations
+  MISE_PYTHON_INSTALL = "false"
+  MISE_RUBY_INSTALL = "false"
+  MISE_GO_INSTALL = "false"
 
 [functions]
   directory = "netlify/functions"
