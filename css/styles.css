@@ -2458,6 +2458,23 @@ section {
     width: 100%;
     height: auto;
     display: block;
+    object-fit: contain; /* Show full video without cropping in modal */
+}
+
+/* Native fullscreen video styling - prevents zoom/crop on mobile */
+video:fullscreen,
+video:-webkit-full-screen,
+video:-moz-full-screen,
+video:-ms-fullscreen {
+    object-fit: contain; /* Show complete video without cropping */
+    width: 100%;
+    height: 100%;
+}
+
+/* Backdrop for fullscreen video (black bars for letterboxing) */
+video::backdrop,
+video::-webkit-backdrop {
+    background-color: #000; /* Black letterbox bars */
 }
 
 .modal-bio-text {
