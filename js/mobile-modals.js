@@ -43,35 +43,10 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Mobile video fullscreen behavior
-    if (video && videoContainer) {
-        // Tap video container to enter fullscreen
-        videoContainer.addEventListener('click', (e) => {
-            // Only trigger if clicking the video itself, not the controls
-            if (e.target === video || e.target === videoContainer) {
-                enterVideoFullscreen(video);
-            }
-        });
-
-        // Listen for fullscreen exit to reset video
+    // Listen for fullscreen exit to reset video (when user uses native fullscreen button)
+    if (video) {
         document.addEventListener('fullscreenchange', () => handleFullscreenExit(video));
         document.addEventListener('webkitfullscreenchange', () => handleFullscreenExit(video));
-    }
-}
-
-/**
- * Enter fullscreen mode for video (mobile optimized)
- */
-function enterVideoFullscreen(video) {
-    if (!video) return;
-
-    // Request fullscreen using the appropriate API
-    if (video.requestFullscreen) {
-        video.requestFullscreen();
-    } else if (video.webkitRequestFullscreen) {
-        video.webkitRequestFullscreen(); // iOS Safari
-    } else if (video.webkitEnterFullscreen) {
-        video.webkitEnterFullscreen(); // Older iOS
     }
 }
 
