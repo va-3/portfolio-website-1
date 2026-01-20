@@ -185,15 +185,14 @@
                          id="pdf-placeholder">
 
                     <!-- PDF loads with visibility hidden, then reveals when ready -->
+                    <!-- Note: type attribute removed for Safari compatibility (macOS Big Sur+ bug) -->
                     <object
                         data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                        type="application/pdf"
                         id="resume-iframe"
                         class="resume-pdf"
                         aria-label="Resume PDF Viewer">
                         <embed
                             src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                            type="application/pdf"
                             class="resume-pdf">
                         </embed>
                     </object>
@@ -258,15 +257,14 @@
     <!-- Resume Fullscreen Modal -->
     <div id="resume-modal" class="resume-modal">
         <div class="resume-modal-content">
+            <!-- Note: type attribute removed for Safari compatibility (macOS Big Sur+ bug) -->
             <object
                 data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                type="application/pdf"
                 id="modal-resume-iframe"
                 class="modal-resume-pdf"
                 aria-label="Resume PDF Fullscreen Viewer">
                 <embed
                     src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                    type="application/pdf"
                     class="modal-resume-pdf">
                 </embed>
             </object>
@@ -328,5 +326,6 @@
     <script src="js/pdf-loader.js"></script>
     <script src="js/resume-modal.js"></script>
     <script src="js/mobile-modals.js"></script>
+    <script src="js/video-fullscreen-desktop.js"></script>
 </body>
 </html>

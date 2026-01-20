@@ -543,10 +543,13 @@ section {
     contain: layout style paint;
 }
 
-.about-text-card:hover {
-    transform: translateY(-4px) translateZ(0);
-    box-shadow: 0 8px 25px var(--card-shadow);
-    border-color: var(--primary-color);
+/* Only apply hover effects on devices with true hover capability (prevents sticky hover on click in Chromium) */
+@media (hover: hover) and (pointer: fine) {
+    .about-text-card:hover {
+        transform: translateY(-4px) translateZ(0);
+        box-shadow: 0 8px 25px var(--card-shadow);
+        border-color: var(--primary-color);
+    }
 }
 
 .about-text {
@@ -600,10 +603,13 @@ section {
     contain: layout style paint;
 }
 
-.video-container:hover {
-    transform: translateY(-4px) translateZ(0);
-    box-shadow: 0 8px 25px var(--card-shadow);
-    border-color: var(--primary-color);
+/* Only apply hover effects on devices with true hover capability (prevents sticky hover on click in Chromium) */
+@media (hover: hover) and (pointer: fine) {
+    .video-container:hover {
+        transform: translateY(-4px) translateZ(0);
+        box-shadow: 0 8px 25px var(--card-shadow);
+        border-color: var(--primary-color);
+    }
 }
 
 .video-container video {
@@ -2483,7 +2489,9 @@ section {
 /* About Me Modal Specific Styles */
 
 /* Native fullscreen video styling - prevents zoom/crop on mobile */
-/* Enhanced specificity and multiple selector approaches for cross-browser compatibility */
+/* Enhanced specificity and multiple selector approaches for cross-browser compatibility
+   Using !important to ensure these styles override any other conflicting rules
+   Addresses WebKit fullscreen regression where object-fit needs high specificity */
 .video-container video:fullscreen,
 .video-container video:-webkit-full-screen,
 .video-container video:-moz-full-screen,
@@ -2499,6 +2507,7 @@ video:-ms-fullscreen,
     width: 100% !important;
     height: 100% !important;
     max-height: none !important; /* Allow full height in fullscreen */
+    max-width: none !important; /* Allow full width in fullscreen */
     background-color: #000 !important; /* Black background for letterboxing */
 }
 
