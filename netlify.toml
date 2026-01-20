@@ -4,12 +4,14 @@
 
 [build.environment]
   NODE_VERSION = "20.11.0"
-  # Disable mise entirely - prevent reading ANY config files
+  # Use Focal (Ubuntu 20.04) build image to avoid mise entirely
+  # Noble (Ubuntu 24.04) uses mise which causes build hangs
+  BUILD_IMAGE = "focal"
+
+  # Legacy environment variables (kept for backwards compatibility)
   MISE_DISABLED = "1"
   MISE_SKIP_INSTALL = "1"
-  # Disable mise's idiomatic version file detection to prevent installing Python/Ruby/Go
   MISE_IDIOMATIC_VERSION_FILE = "false"
-  # Skip unnecessary language installations
   MISE_PYTHON_INSTALL = "false"
   MISE_RUBY_INSTALL = "false"
   MISE_GO_INSTALL = "false"
