@@ -4,6 +4,9 @@
 
 [build.environment]
   NODE_VERSION = "20.11.0"
+  # Disable mise entirely - prevent reading ANY config files
+  MISE_DISABLED = "1"
+  MISE_SKIP_INSTALL = "1"
   # Disable mise's idiomatic version file detection to prevent installing Python/Ruby/Go
   MISE_IDIOMATIC_VERSION_FILE = "false"
   # Skip unnecessary language installations

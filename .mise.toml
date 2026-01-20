@@ -1,9 +1,15 @@
 # Mise configuration for portfolio website
 # This file overrides Netlify's global mise config to prevent unnecessary tool installation
 
-# Only Node.js is needed (for serverless functions)
-# Python, Ruby, and Go are NOT needed for this static site
+# CRITICAL: This file MUST exist to override Netlify's global ~/.config/mise/config.toml
+# Without this, builds hang trying to install Python 3.14.2, Ruby 3.4.8, and Go 1.25.6
 
-# Empty tools section = no additional tools to install
+# Explicitly disable all tools except Node.js
+[env]
+_.python = ""
+_.ruby = ""
+_.go = ""
+
 [tools]
-# nodejs is managed via NODE_VERSION in netlify.toml
+# Node.js is managed via NODE_VERSION environment variable in netlify.toml
+# DO NOT add nodejs here - it's handled by Netlify's NODE_VERSION setting
