@@ -518,7 +518,7 @@ section {
     display: grid;
     grid-template-columns: 1.85fr 1fr;
     gap: var(--spacing-2xl);
-    align-items: stretch;
+    align-items: start;
 }
 
 /* About Text Card - matches timeline card styling */
@@ -532,7 +532,6 @@ section {
     display: flex;
     flex-direction: column;
     justify-content: center; /* Center text vertically to match video alignment */
-    height: 100%;
 
     /* GPU acceleration */
     transform: translateZ(0);
@@ -575,7 +574,6 @@ section {
     display: flex;
     justify-content: center;
     align-items: stretch;
-    height: 100%;
 }
 
 .video-container {
