@@ -1927,25 +1927,32 @@ section {
     }
 
     .hero .container {
-        display: flex; /* Switch from grid to flex for better mobile control */
+        display: flex;
         flex-direction: column;
         text-align: center;
         gap: var(--spacing-md);
     }
 
+    /* Make hero-content use contents to unwrap its children into parent flex */
     .hero-content {
-        order: 1; /* Name and subtitle first */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        display: contents;
     }
 
+    /* Group text elements together and order them first */
+    .hero-title,
+    .hero-subtitle,
+    .hero-roles {
+        order: 1;
+    }
+
+    /* Profile image second (between text and Dobby) */
     .hero-image {
-        order: 2; /* Profile image second (below text, above Dobby) */
+        order: 2;
     }
 
+    /* Dobby chatbot last */
     .ai-chat-card {
-        order: 3; /* Dobby chatbot last (below profile image) */
+        order: 3;
         margin-top: 1rem;
     }
 
