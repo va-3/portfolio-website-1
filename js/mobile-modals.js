@@ -33,6 +33,8 @@ function initMobileModals() {
  */
 function initAboutModal() {
     const aboutCard = document.querySelector('.about-text-card');
+    const videoContainer = document.querySelector('.video-container');
+    const video = videoContainer ? videoContainer.querySelector('video') : null;
 
     if (!aboutCard) return;
 
@@ -41,8 +43,51 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Video now uses native controls - no custom click handler needed
-    // Tapping the video will play/pause, and users can use native fullscreen button
+    // Mobile video fullscreen behavior
+    if (video && videoContainer) {
+        // Tap video container to enter fullscreen
+        videoContainer.addEventListener('click', (e) => {
+            // Only trigger if clicking the video itself, not the controls
+            if (e.target === video || e.target === videoContainer) {
+                enterVideoFullscreen(video);
+            }
+        });
+
+        // Listen for fullscreen exit to reset video
+        document.addEventListener('fullscreenchange', () => handleFullscreenExit(video));
+        document.addEventListener('webkitfullscreenchange', () => handleFullscreenExit(video));
+    }
+}
+
+/**
+ * Enter fullscreen mode for video (mobile optimized)
+ */
+function enterVideoFullscreen(video) {
+    if (!video) return;
+
+    // Request fullscreen using the appropriate API
+    if (video.requestFullscreen) {
+        video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) {
+        video.webkitRequestFullscreen(); // iOS Safari
+    } else if (video.webkitEnterFullscreen) {
+        video.webkitEnterFullscreen(); // Older iOS
+    }
+}
+
+/**
+ * Handle video state when exiting fullscreen
+ */
+function handleFullscreenExit(video) {
+    // Check if we're NOT in fullscreen anymore
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+
+    if (!isFullscreen && video) {
+        // Reset video to initial state
+        video.pause();
+        video.currentTime = 0;
+        video.load(); // Reload to show poster image
+    }
 }
 
 /**
