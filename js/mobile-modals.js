@@ -217,15 +217,18 @@ function closeModal(modal, scrollToTop = false) {
     document.body.style.right = '';
     document.body.style.overflow = '';
 
-    // Either scroll to top or restore previous position
-    if (scrollToTop) {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
-    } else {
-        window.scrollTo(0, parseInt(scrollY));
-    }
+    // Small delay to ensure body styles are cleared before scrolling
+    setTimeout(() => {
+        // Either scroll to top or restore previous position
+        if (scrollToTop) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        } else {
+            window.scrollTo(0, parseInt(scrollY));
+        }
+    }, 0);
 
     // Restore focus
     if (previousFocus) {
