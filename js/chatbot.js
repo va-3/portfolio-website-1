@@ -144,20 +144,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Restore body scroll on mobile
         if (window.innerWidth <= 768) {
+            const scrollY = aiChatCard.dataset.scrollY || 0;
             document.body.style.position = '';
             document.body.style.top = '';
             document.body.style.left = '';
             document.body.style.right = '';
             document.body.style.overflow = '';
             document.body.style.width = '';
-
-            // Scroll to top of page (home functionality)
-            setTimeout(() => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }, 100);
+            window.scrollTo(0, parseInt(scrollY));
 
             // Reset readonly state for next open
             chatbotInput.setAttribute('readonly', 'readonly');
