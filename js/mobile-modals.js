@@ -72,26 +72,12 @@ function openAboutModal() {
     if (modalIsOpen) return;
 
     const modal = modals.about;
-    const modalVideoContainer = modal.querySelector('.modal-video-container');
     const modalBioText = modal.querySelector('.modal-bio-text');
 
     // Completely clear any existing content first
-    modalVideoContainer.innerHTML = '';
     modalBioText.innerHTML = '';
 
-    // Clone video element
-    const videoContainer = document.querySelector('.video-container');
-    const videoClone = videoContainer.cloneNode(true);
-    videoClone.style.position = 'relative'; // Remove any absolute positioning
-
-    // Remove the play icon overlay from cloned video
-    videoClone.style.setProperty('--before-content', 'none');
-    const style = document.createElement('style');
-    style.textContent = '.modal-video-container .video-container::before { display: none !important; }';
-    modalVideoContainer.appendChild(style);
-    modalVideoContainer.appendChild(videoClone);
-
-    // Clone bio paragraphs
+    // Clone bio paragraphs only (no video)
     const aboutParagraphs = document.querySelectorAll('.about-paragraph');
     aboutParagraphs.forEach(p => {
         const clone = p.cloneNode(true);
@@ -164,8 +150,16 @@ function openModal(modal) {
     // Store previously focused element
     previousFocus = document.activeElement;
 
-    // Prevent body scroll
+    // Prevent body scroll (iOS-compatible approach)
+    const scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
     document.body.style.overflow = 'hidden';
+
+    // Store scroll position for restoration
+    modal.dataset.scrollY = scrollY;
 
     // Show modal
     modal.classList.add('active');
@@ -189,8 +183,14 @@ function closeModal(modal) {
     // Reset modal open state
     modalIsOpen = false;
 
-    // Restore body scroll
+    // Restore body scroll and position
+    const scrollY = modal.dataset.scrollY || 0;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.left = '';
+    document.body.style.right = '';
     document.body.style.overflow = '';
+    window.scrollTo(0, parseInt(scrollY));
 
     // Restore focus
     if (previousFocus) {

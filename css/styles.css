@@ -2447,20 +2447,6 @@ section {
 }
 
 /* About Me Modal Specific Styles */
-.modal-video-container {
-    width: 100%;
-    margin-bottom: 1.5rem;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.modal-video-container video {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain; /* Show full video without cropping in modal */
-}
 
 /* Native fullscreen video styling - prevents zoom/crop on mobile */
 video:fullscreen,
