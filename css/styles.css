@@ -721,7 +721,7 @@ section {
 /* Animated scroll-tracking dot */
 .timeline-dot-animated {
     position: absolute;
-    left: 16.5px;
+    left: 7.5px; /* Center on 3px line: 15px + 1.5px - 9px (half dot width) */
     top: 0;
     width: 18px;
     height: 18px;
@@ -730,7 +730,6 @@ section {
     border-radius: 50%;
     box-shadow: 0 0 15px var(--primary-color), var(--shadow-md);
     z-index: 10;
-    transform: translateX(-50%);
     will-change: transform;
     opacity: 1;
     /* Remove transition to let JS handle smooth animation */
@@ -1941,11 +1940,11 @@ section {
     }
 
     .hero-image {
-        order: 2; /* Profile image second */
+        order: 3; /* Profile image third (below Dobby) */
     }
 
     .ai-chat-card {
-        order: 3; /* Dobby chatbot last (below image) */
+        order: 2; /* Dobby chatbot second (above profile image) */
         margin-top: 1rem;
     }
 
@@ -1990,6 +1989,10 @@ section {
 
     .timeline-dot {
         left: -26px;
+    }
+
+    .timeline-dot-animated {
+        left: 2.5px; /* Center on mobile line: 10px + 1.5px - 9px (half dot width) */
     }
 }
 

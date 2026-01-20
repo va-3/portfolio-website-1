@@ -283,8 +283,8 @@ function updateTimelineDot() {
     const newTop = progress * timelineHeight;
     const scale = progress > 0 && progress < 1 ? 1 : 0.8;
 
-    // Use translate3d for GPU acceleration instead of top property
-    dotElement.style.transform = `translate3d(-50%, ${newTop}px, 0) scale(${scale})`;
+    // Use translate3d for GPU acceleration (Y-axis only, X position set via CSS)
+    dotElement.style.transform = `translate3d(0, ${newTop}px, 0) scale(${scale})`;
 }
 
 // Use requestAnimationFrame for smooth 60fps animation
