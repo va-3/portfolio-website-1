@@ -203,35 +203,20 @@ function openModal(modal) {
 /**
  * Generic modal close function
  */
-function closeModal(modal, scrollToTop = false) {
+function closeModal(modal) {
     modal.classList.remove('active');
 
     // Reset modal open state
     modalIsOpen = false;
 
-    // Restore body scroll and position
+    // Restore body scroll and position to where user was before opening modal
     const scrollY = modal.dataset.scrollY || 0;
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.left = '';
     document.body.style.right = '';
     document.body.style.overflow = '';
-
-    // Use double requestAnimationFrame to ensure scroll happens after repaint
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            if (scrollToTop) {
-                // Scroll to top with smooth animation
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            } else {
-                // Restore previous scroll position instantly (no animation)
-                window.scrollTo(0, parseInt(scrollY));
-            }
-        });
-    });
+    window.scrollTo(0, parseInt(scrollY));
 
     // Restore focus
     if (previousFocus) {
@@ -309,7 +294,7 @@ function initNavigationHandlers() {
             if (isAnyModalOpen() && !isChatOpen()) {
                 e.preventDefault();
                 const openModal = getOpenModal();
-                closeModal(openModal, false); // Close and restore scroll position
+                closeModal(openModal); // Close and keep user at same scroll position
             }
             // If chat is open or no modal is open, let chatbot.js or default behavior handle it
         });
