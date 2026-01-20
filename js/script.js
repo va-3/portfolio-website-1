@@ -97,53 +97,9 @@ window.addEventListener('load', highlightNavigation);
 // ===================================
 // TIMELINE DOT SCROLL TRACKING
 // ===================================
-function updateTimelineDot() {
-    const timeline = document.querySelector('.timeline');
-    const dot = document.querySelector('.timeline-dot-animated');
-
-    if (!timeline || !dot) return;
-
-    // Get timeline boundaries
-    const timelineRect = timeline.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const scrollY = window.pageYOffset || window.scrollY;
-
-    // Calculate the timeline's absolute position
-    const timelineTop = timelineRect.top + scrollY;
-    const timelineHeight = timelineRect.height;
-
-    // Track based on how much of timeline has scrolled past viewport top
-    const scrolledPast = scrollY - timelineTop + (viewportHeight * 0.3);
-    const progress = Math.max(0, Math.min(1, scrolledPast / timelineHeight));
-
-    // Update dot position
-    const newTop = progress * timelineHeight;
-    dot.style.top = `${newTop}px`;
-
-    // Ensure dot is visible
-    dot.style.opacity = '1';
-
-    // Scale based on progress
-    const scale = progress > 0 && progress < 1 ? 1 : 0.8;
-    dot.style.transform = `translateX(-50%) scale(${scale})`;
-}
-
-// Use requestAnimationFrame for smooth 60fps animation
-let timelineTicking = false;
-function requestTimelineUpdate() {
-    if (!timelineTicking) {
-        requestAnimationFrame(() => {
-            updateTimelineDot();
-            timelineTicking = false;
-        });
-        timelineTicking = true;
-    }
-}
-
-// Attach event listeners for timeline dot
-window.addEventListener('scroll', requestTimelineUpdate, { passive: true });
-window.addEventListener('resize', updateTimelineDot);
-document.addEventListener('DOMContentLoaded', updateTimelineDot);
+// NOTE: Timeline dot animation is handled in main.js using GPU-accelerated
+// translate3d transforms. This provides better performance than the old
+// top property approach, especially on mobile with rapid swipe scrolling.
 
 // ===================================
 // FADE-IN ANIMATION ON SCROLL

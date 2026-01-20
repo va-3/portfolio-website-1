@@ -57,9 +57,17 @@ document.addEventListener('DOMContentLoaded', function() {
     function expandChat() {
         if (!isExpanded) {
             console.log('Expanding chat card...');
+
+            // Save current scroll position to prevent layout shift
+            const scrollY = window.scrollY;
+
             aiChatCard.classList.add('expanded');
             isExpanded = true;
             console.log('Chat card classes:', aiChatCard.className);
+
+            // Restore scroll position immediately after expansion
+            // (prevents visual jump from layout recalculation)
+            window.scrollTo(0, scrollY);
 
             // Load existing history from sessionStorage or show welcome message
             const hasHistory = loadChatHistory();

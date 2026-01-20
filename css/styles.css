@@ -1927,8 +1927,26 @@ section {
     }
 
     .hero .container {
-        grid-template-columns: 1fr;
+        display: flex; /* Switch from grid to flex for better mobile control */
+        flex-direction: column;
         text-align: center;
+        gap: var(--spacing-md);
+    }
+
+    .hero-content {
+        order: 1; /* Name and subtitle first */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-image {
+        order: 2; /* Profile image second */
+    }
+
+    .ai-chat-card {
+        order: 3; /* Dobby chatbot last (below image) */
+        margin-top: 1rem;
     }
 
     .name {
@@ -2095,7 +2113,7 @@ section {
 
     /* Video thumbnail in compact mode */
     .video-container {
-        height: 280px; /* Increased height for portrait video */
+        height: 340px; /* Increased from 280px to show shoulders (+60px / 21% taller) */
         border-radius: 12px;
         cursor: pointer;
         position: relative;
