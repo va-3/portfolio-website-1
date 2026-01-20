@@ -43,25 +43,48 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Listen for fullscreen exit to reset video (when user uses native fullscreen button)
+    // Listen for fullscreen changes to handle video styling and state
     if (video) {
-        document.addEventListener('fullscreenchange', () => handleFullscreenExit(video));
-        document.addEventListener('webkitfullscreenchange', () => handleFullscreenExit(video));
+        document.addEventListener('fullscreenchange', () => handleFullscreenChange(video));
+        document.addEventListener('webkitfullscreenchange', () => handleFullscreenChange(video));
+        document.addEventListener('mozfullscreenchange', () => handleFullscreenChange(video));
+        document.addEventListener('MSFullscreenChange', () => handleFullscreenChange(video));
     }
 }
 
 /**
- * Handle video state when exiting fullscreen
+ * Handle video state and styling when entering/exiting fullscreen
  */
-function handleFullscreenExit(video) {
-    // Check if we're NOT in fullscreen anymore
-    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement;
+function handleFullscreenChange(video) {
+    // Check if we're in fullscreen mode
+    const isFullscreen = document.fullscreenElement ||
+                        document.webkitFullscreenElement ||
+                        document.mozFullScreenElement ||
+                        document.msFullscreenElement;
 
-    if (!isFullscreen && video) {
-        // Reset video to initial state
+    if (isFullscreen && video) {
+        // Entering fullscreen - force correct object-fit styling
+        video.style.objectFit = 'contain';
+        video.style.objectPosition = 'center';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.maxHeight = 'none';
+        video.style.backgroundColor = '#000';
+        console.log('Fullscreen entered: Applied contain styling');
+    } else if (video) {
+        // Exiting fullscreen - reset video to initial state
         video.pause();
         video.currentTime = 0;
         video.load(); // Reload to show poster image
+
+        // Remove inline styles to let CSS take over
+        video.style.objectFit = '';
+        video.style.objectPosition = '';
+        video.style.width = '';
+        video.style.height = '';
+        video.style.maxHeight = '';
+        video.style.backgroundColor = '';
+        console.log('Fullscreen exited: Reset video state');
     }
 }
 

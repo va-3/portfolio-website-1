@@ -2483,6 +2483,7 @@ section {
 /* About Me Modal Specific Styles */
 
 /* Native fullscreen video styling - prevents zoom/crop on mobile */
+/* Enhanced specificity and multiple selector approaches for cross-browser compatibility */
 .video-container video:fullscreen,
 .video-container video:-webkit-full-screen,
 .video-container video:-moz-full-screen,
@@ -2490,12 +2491,28 @@ section {
 video:fullscreen,
 video:-webkit-full-screen,
 video:-moz-full-screen,
-video:-ms-fullscreen {
+video:-ms-fullscreen,
+.about-video video:fullscreen,
+.about-video video:-webkit-full-screen {
     object-fit: contain !important; /* Show complete video without cropping */
     object-position: center !important;
     width: 100% !important;
     height: 100% !important;
     max-height: none !important; /* Allow full height in fullscreen */
+    background-color: #000 !important; /* Black background for letterboxing */
+}
+
+/* Additional WebKit-specific fullscreen fix for Safari/Chrome */
+video::-webkit-media-controls-panel {
+    display: flex !important;
+}
+
+/* Ensure video element maintains contain in fullscreen across all browsers */
+*:fullscreen video,
+*:-webkit-full-screen video,
+*:-moz-full-screen video {
+    object-fit: contain !important;
+    object-position: center !important;
 }
 
 /* Backdrop for fullscreen video (black bars for letterboxing) */
