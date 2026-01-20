@@ -2214,6 +2214,27 @@ section {
         width: 280px; /* Smaller collapsed chatbot */
     }
 
+    /* Expanded chat should be centered and overlay on mobile */
+    .ai-chat-card.expanded {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        z-index: 9999 !important;
+        width: 90vw !important;
+        max-width: 400px !important;
+        margin: 0 !important;
+    }
+
+    /* Reduce placeholder text size for mobile */
+    .chat-input-field {
+        font-size: 0.8rem !important;
+    }
+
+    .chat-input-field::placeholder {
+        font-size: 0.75rem !important;
+    }
+
     .chatbot-container {
         width: auto;
         right: 1rem;

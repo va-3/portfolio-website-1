@@ -58,16 +58,27 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isExpanded) {
             console.log('Expanding chat card...');
 
-            // Save current scroll position to prevent layout shift
+            // Save current scroll position
             const scrollY = window.scrollY;
+
+            // Lock body scroll on mobile (prevents background scrolling)
+            if (window.innerWidth <= 768) {
+                document.body.style.position = 'fixed';
+                document.body.style.top = `-${scrollY}px`;
+                document.body.style.left = '0';
+                document.body.style.right = '0';
+                document.body.style.overflow = 'hidden';
+                document.body.style.width = '100%';
+                // Store scroll position for restoration
+                aiChatCard.dataset.scrollY = scrollY;
+            } else {
+                // Desktop: just prevent scroll jump
+                window.scrollTo(0, scrollY);
+            }
 
             aiChatCard.classList.add('expanded');
             isExpanded = true;
             console.log('Chat card classes:', aiChatCard.className);
-
-            // Restore scroll position immediately after expansion
-            // (prevents visual jump from layout recalculation)
-            window.scrollTo(0, scrollY);
 
             // Load existing history from sessionStorage or show welcome message
             const hasHistory = loadChatHistory();
@@ -100,6 +111,19 @@ document.addEventListener('DOMContentLoaded', function() {
     function collapseChat() {
         aiChatCard.classList.remove('expanded');
         isExpanded = false;
+
+        // Restore body scroll on mobile
+        if (window.innerWidth <= 768) {
+            const scrollY = aiChatCard.dataset.scrollY || 0;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.left = '';
+            document.body.style.right = '';
+            document.body.style.overflow = '';
+            document.body.style.width = '';
+            window.scrollTo(0, parseInt(scrollY));
+        }
+
         // Clear DOM but keep sessionStorage (will restore on expand)
         chatbotMessages.innerHTML = '';
         console.log('Chat collapsed, messages saved to storage');
