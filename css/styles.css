@@ -1988,11 +1988,233 @@ section {
     }
 
     .gallery-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr); /* 2-column for compact mobile */
+        gap: 0.75rem; /* Tighter gap */
     }
 
     .facts-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+/* ===================================
+   State-of-the-Art Mobile Optimizations (2026)
+   Target: 320px-640px (iPhone SE to iPhone Pro Max)
+   =================================== */
+@media (max-width: 640px) {
+    /* Global mobile spacing optimization */
+    .container {
+        padding: 0 1rem; /* Tighter side padding */
+    }
+
+    section {
+        padding: 2rem 0; /* Reduced from desktop 4rem */
+    }
+
+    /* Hero section optimization */
+    .profile-circle {
+        width: 180px !important; /* Smaller profile pic */
+        height: 180px !important;
+        margin: 1rem auto; /* Tighter margins */
+    }
+
+    .name {
+        font-size: 2rem; /* 32px */
+        margin-bottom: 0.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem; /* 17.6px */
+        margin-bottom: 0.25rem;
+    }
+
+    .hero-roles {
+        font-size: 0.8rem; /* 12.8px */
+    }
+
+    /* Compact About Me Section */
+    .about-content {
+        grid-template-columns: 1fr;
+        gap: 1rem; /* Reduced from 3rem */
+    }
+
+    .about-text-card {
+        padding: 1rem; /* Compact padding */
+        position: relative;
+        cursor: pointer; /* Indicate tappable */
+        transition: all 0.2s ease;
+    }
+
+    .about-text-card:active {
+        transform: scale(0.98); /* Tap feedback */
+    }
+
+    /* About Me Preview Mode (collapsed) */
+    .about-text-card .about-paragraph {
+        font-size: 14px; /* Smaller, readable font */
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+
+    .about-text-card .about-paragraph:not(:first-child) {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show 2 lines for paragraphs 2-3 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .about-text-card .about-paragraph:first-child {
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* Show 3 lines for first paragraph */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* Add "Tap to read more" indicator */
+    .about-text-card::after {
+        content: "Tap to read more →";
+        display: block;
+        text-align: center;
+        font-size: 13px;
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    /* Video thumbnail in compact mode */
+    .video-container {
+        height: 200px; /* Compact video height */
+        border-radius: 12px;
+        cursor: pointer;
+    }
+
+    .video-container video {
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Add play icon overlay */
+    .video-container::before {
+        content: "▶";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3rem;
+        color: white;
+        opacity: 0.9;
+        pointer-events: none;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Compact Timeline/Resume */
+    .section-title {
+        font-size: 1.75rem; /* 28px */
+        margin-bottom: 1rem;
+    }
+
+    .timeline-content {
+        padding: 0.75rem; /* Compact card padding */
+    }
+
+    .timeline-content h3 {
+        font-size: 1rem; /* 16px */
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-content h4 {
+        font-size: 0.9rem; /* 14.4px */
+        margin-bottom: 0.25rem;
+    }
+
+    .timeline-date {
+        font-size: 0.8rem; /* 12.8px */
+        margin-bottom: 0.5rem;
+    }
+
+    .timeline-content ul {
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* Show only 2 bullet points */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-size: 0.85rem; /* 13.6px */
+    }
+
+    /* Add "Tap for details" to timeline cards */
+    .timeline-content::after {
+        content: "Tap for details →";
+        display: block;
+        text-align: right;
+        font-size: 12px;
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .timeline-item {
+        margin-bottom: 1.5rem; /* Tighter spacing between timeline items */
+    }
+
+    /* Compact resume PDF preview */
+    .resume-pdf-container {
+        height: 400px; /* Smaller preview */
+    }
+
+    /* Chatbot optimization */
+    .ai-chat-card {
+        width: 280px; /* Smaller collapsed chatbot */
+    }
+
+    .chatbot-container {
+        width: auto;
+        right: 1rem;
+        bottom: 1rem;
+    }
+
+    /* Gallery 2-column layout */
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    /* Compact skill tags */
+    .skill-tag {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.7rem;
+    }
+
+    /* Tighter button spacing */
+    .btn {
+        font-size: 0.9rem;
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* Ultra-compact for very small screens (iPhone SE) */
+@media (max-width: 375px) {
+    .container {
+        padding: 0 0.75rem;
+    }
+
+    .profile-circle {
+        width: 150px !important;
+        height: 150px !important;
+    }
+
+    .name {
+        font-size: 1.75rem;
+    }
+
+    .about-text-card .about-paragraph {
+        font-size: 13px;
+    }
+
+    .gallery-grid {
+        gap: 0.5rem;
     }
 }
 
@@ -2023,4 +2245,221 @@ section {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--primary-dark);
+}
+
+/* ===================================
+   Fullscreen Modal System (Mobile-First 2026)
+   =================================== */
+.fullscreen-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Fallback */
+    height: 100svh; /* Small viewport height - stable, best for modals */
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.fullscreen-modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Dark overlay backdrop */
+.modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.75); /* Darker overlay for better focus */
+    backdrop-filter: blur(4px); /* Modern glassmorphism effect */
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1;
+}
+
+/* Modal content container */
+.modal-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    z-index: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* Smooth iOS scrolling */
+    transform: translateY(100%); /* Start off-screen (bottom) */
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Material Design easing */
+
+    /* Safe area support for notched devices */
+    padding-bottom: env(safe-area-inset-bottom);
+
+    /* GPU acceleration */
+    will-change: transform;
+    backface-visibility: hidden;
+}
+
+.fullscreen-modal.active .modal-content {
+    transform: translateY(0); /* Slide up into view */
+}
+
+/* Modal header */
+.modal-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-primary);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+
+    /* Safe area support for top notch */
+    padding-top: calc(1rem + env(safe-area-inset-top));
+}
+
+.modal-header h2 {
+    font-family: var(--font-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Close button */
+.modal-close-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.modal-close-btn:hover,
+.modal-close-btn:focus {
+    background: var(--bg-secondary);
+    color: var(--primary-color);
+}
+
+.modal-close-btn:active {
+    transform: scale(0.9);
+}
+
+.modal-close-btn svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* Modal body content */
+.modal-body {
+    padding: 1.5rem;
+    max-width: 100%;
+}
+
+/* About Me Modal Specific Styles */
+.modal-video-container {
+    width: 100%;
+    margin-bottom: 1.5rem;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.modal-video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.modal-bio-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.modal-bio-text p {
+    font-family: var(--font-secondary);
+    font-size: 16px; /* Optimal mobile reading size */
+    line-height: 1.6;
+    color: var(--text-primary);
+    text-align: left;
+    margin: 0;
+}
+
+/* Timeline Modal Specific Styles */
+.modal-timeline-content {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 2px solid var(--border-color);
+}
+
+.modal-timeline-content h3 {
+    font-family: var(--font-primary);
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-timeline-content h4 {
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    color: var(--primary-color);
+    margin: 0 0 0.5rem 0;
+}
+
+.modal-timeline-content .timeline-date {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.modal-timeline-content ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin: 0;
+    display: block; /* Override line-clamp */
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+    overflow: visible;
+}
+
+.modal-timeline-content li {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+}
+
+/* Dark theme support */
+[data-theme="dark"] .modal-content {
+    background: #1a1625;
+}
+
+[data-theme="dark"] .modal-header {
+    background: #1a1625;
+    border-bottom-color: rgba(255,255,255,0.1);
+}
+
+/* Desktop: Hide modals (only show on mobile) */
+@media (min-width: 769px) {
+    .fullscreen-modal {
+        display: none;
+    }
 }
