@@ -2243,11 +2243,29 @@ section {
         min-height: 74px !important;
     }
 
-    /* Collapse button on the left */
+    /* Collapse button on the left - styled as home button */
     .ai-chat-card.expanded .collapse-chat-btn {
+        position: static !important;
         grid-column: 1 !important;
         justify-self: start !important;
         margin-left: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        display: flex !important;
+        border-radius: 50% !important;
+        background: var(--bg-secondary) !important;
+        border: 2px solid var(--border-color) !important;
+    }
+
+    .ai-chat-card.expanded .collapse-chat-btn:hover {
+        background: var(--primary-color) !important;
+        color: white !important;
+        border-color: var(--primary-color) !important;
+    }
+
+    /* Change icon to home icon in fullscreen */
+    .ai-chat-card.expanded .collapse-chat-btn i::before {
+        content: "\f015" !important; /* Font Awesome home icon */
     }
 
     /* Dobby branding in the center */

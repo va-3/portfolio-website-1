@@ -54,9 +54,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Expand chat on input focus or click
-    function expandChat() {
+    function expandChat(e) {
         if (!isExpanded) {
             console.log('Expanding chat card...');
+
+            // Prevent default to stop mobile zoom/scroll to input
+            if (e && window.innerWidth <= 768) {
+                e.preventDefault();
+                // Blur the input to prevent keyboard and zoom
+                if (chatbotInput === document.activeElement) {
+                    chatbotInput.blur();
+                }
+            }
 
             // Save current scroll position
             const scrollY = window.scrollY;
@@ -88,9 +97,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Reset scroll position to top when opening modal
             chatbotMessages.scrollTop = 0;
+
+            // On mobile, after expansion, allow focus without triggering expansion again
+            if (window.innerWidth <= 768) {
+                setTimeout(() => {
+                    chatbotInput.removeEventListener('focus', expandChat);
+                    chatbotInput.removeEventListener('click', expandChat);
+                }, 100);
+            }
         }
     }
 
+    // Prevent focus from triggering zoom on mobile
+    if (window.innerWidth <= 768) {
+        chatbotInput.addEventListener('touchstart', expandChat, { passive: false });
+    }
     chatbotInput.addEventListener('focus', expandChat);
     chatbotInput.addEventListener('click', expandChat);
 
