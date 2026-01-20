@@ -1,0 +1,9 @@
+# Mise configuration for portfolio website
+# This file overrides Netlify's global mise config to prevent unnecessary tool installation
+
+# Only Node.js is needed (for serverless functions)
+# Python, Ruby, and Go are NOT needed for this static site
+
+# Empty tools section = no additional tools to install
+[tools]
+# nodejs is managed via NODE_VERSION in netlify.toml
