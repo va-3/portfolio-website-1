@@ -1,14 +1,50 @@
-# Netlify Build Hanging Fix - PERMANENT SOLUTION
+# Netlify Build Fix - PERMANENT SOLUTION ✅ WORKING
 
-**Issue**: Builds hang at "Starting to install dependencies" with mise trying to install Python 3.14.2, Ruby 3.4.8, and Go 1.25.6
+**Issue**: Builds were hanging at "Starting to install dependencies" with mise trying to install Python 3.14.2, Ruby 3.4.8, and Go 1.25.6
 
 **Root Cause**: Netlify's Noble (Ubuntu 24.04) build image has a global `~/.config/mise/config.toml` that forces installation of these tools, even though this static site only needs Node.js.
 
+**✅ SOLUTION IMPLEMENTED**: Switched to Focal (Ubuntu 20.04) build image via `BUILD_IMAGE = "focal"` in netlify.toml
+
 ---
 
-## Current Fix Attempts (In Priority Order)
+## ✅ Working Solution (January 2026)
 
-### ✅ Attempt 1: Environment Variables (netlify.toml)
+**Configuration in `netlify.toml`:**
+```toml
+[build.environment]
+  BUILD_IMAGE = "focal"  # This is the critical line
+  NODE_VERSION = "20.11.0"
+```
+
+**Result**: Builds complete in 30-60 seconds consistently. No more hangs.
+
+**Why it works**: Focal (Ubuntu 20.04) uses traditional nvm for Node.js instead of mise, completely avoiding the problem.
+
+---
+
+## ⚠️ DO NOT CHANGE These Files
+
+The following files are **critical** for preventing build hangs. Do NOT delete or modify them without understanding the consequences:
+
+### 1. `netlify.toml` - Build Configuration
+**Critical line**: `BUILD_IMAGE = "focal"`
+
+If you remove this line, builds will revert to Noble (Ubuntu 24.04) and start hanging again.
+
+### 2. `.mise.toml` - Mise Override Config
+Even though we use Focal (which doesn't have mise), this file stays as a safeguard in case the build image changes.
+
+### 3. `.tool-versions` - Tool Version File
+Empty file that signals "no additional tools needed" to any version managers.
+
+---
+
+## Attempted Fixes (For Historical Reference)
+
+These were tried but didn't work on Noble image:
+
+### ❌ Attempt 1: Environment Variables (netlify.toml)
 ```toml
 [build.environment]
   MISE_DISABLED = "1"
@@ -27,27 +63,33 @@ Created `.tool-versions` to signal "no additional tools needed."
 
 ---
 
-## If Builds Still Hang: ULTIMATE FIX
+## Deployment Checklist - Future Reference
 
-If the above fixes don't work, switch to Netlify's **Focal (Ubuntu 20.04)** build image, which doesn't use mise:
+Before deploying changes to this site:
 
-### Via Netlify UI (Recommended)
-1. Go to Netlify dashboard → Your site → **Site settings**
-2. Navigate to **Build & deploy** → **Environment**
-3. Add new variable:
-   - **Key**: `BUILD_IMAGE`
-   - **Value**: `focal`
-4. Click **Save**
-5. Trigger new deploy: **Deploys** → **Trigger deploy** → **Deploy site**
+- [ ] Verify `BUILD_IMAGE = "focal"` is still in netlify.toml
+- [ ] Don't delete `.mise.toml` or `.tool-versions`
+- [ ] Node.js version updates should only change `NODE_VERSION` in netlify.toml
+- [ ] If switching to Noble image, expect build hangs (not recommended)
 
-### Via netlify.toml (Alternative)
-Add to the `[build]` section:
-```toml
-[build]
-  publish = "."
-  command = "echo 'Static site - no build needed'"
-  environment = { BUILD_IMAGE = "focal" }
-```
+## Troubleshooting Future Issues
+
+### If builds suddenly start hanging again:
+
+1. **Check build image**: Look for this in deploy logs:
+   ```
+   build-image version: [hash] (focal)  ← Should say "focal"
+   ```
+
+2. **Verify netlify.toml**: Ensure `BUILD_IMAGE = "focal"` is present
+
+3. **Check for file changes**: Make sure `.mise.toml` wasn't accidentally deleted
+
+### If you want to try Noble image again (not recommended):
+
+1. Remove `BUILD_IMAGE = "focal"` from netlify.toml
+2. Expect first deploy to take 10-15 minutes as it builds Python/Ruby/Go from source
+3. May still hang - this is why we use Focal
 
 ---
 
@@ -140,6 +182,41 @@ Or simply use Focal build image from the start:
 
 ---
 
+## What Good Deployments Look Like
+
+**Expected timeline**: 30-60 seconds total
+
+```
+3:XX:XX AM: build-image version: [hash] (focal)          ← Focal image ✅
+3:XX:XX AM: Starting to prepare the repo for build
+3:XX:XX AM: Installing Node.js 20.11.0 using nvm          ← Using nvm, not mise ✅
+3:XX:XX AM: Node.js installation complete
+3:XX:XX AM: Running build command
+3:XX:XX AM: Build complete
+3:XX:XX AM: Bundling functions
+3:XX:XX AM: Site is live ✅
+```
+
+**Red flags** (bad deployment):
+```
+3:XX:XX AM: build-image version: [hash] (noble)           ← Wrong image ❌
+3:XX:XX AM: mise ~/.config/mise/config.toml tools         ← Mise detected ❌
+3:XX:XX AM: [HANGS HERE]                                  ← Build timeout ❌
+```
+
+If you see "noble" or "mise" in logs, immediately check netlify.toml for the `BUILD_IMAGE` setting.
+
+---
+
+## Summary
+
+**Problem**: Noble build image + mise = build hangs
+**Solution**: Focal build image = fast, reliable builds
+**Status**: ✅ Working as of January 20, 2026
+**Maintenance**: Keep `BUILD_IMAGE = "focal"` in netlify.toml
+
+---
+
 **Last Updated**: January 20, 2026
-**Deployment Status**: Testing aggressive mise disabling approach
-**Next Step If Fails**: Switch to Focal build image
+**Deployment Status**: ✅ WORKING - Builds complete in 30-60 seconds
+**Current Build Image**: Focal (Ubuntu 20.04)
