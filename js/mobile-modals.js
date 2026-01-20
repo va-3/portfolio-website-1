@@ -13,6 +13,7 @@ let previousFocus = null; // For accessibility: restore focus when modal closes
 let touchStartY = 0;
 let touchCurrentY = 0;
 let isDragging = false;
+let modalIsOpen = false; // Prevent multiple simultaneous modal opens
 
 /**
  * Initialize mobile modal system
@@ -52,23 +53,34 @@ function initAboutModal() {
  * Open About Me modal and populate content
  */
 function openAboutModal() {
+    // Prevent multiple simultaneous opens (fixes duplication bug)
+    if (modalIsOpen) return;
+
     const modal = modals.about;
     const modalVideoContainer = modal.querySelector('.modal-video-container');
     const modalBioText = modal.querySelector('.modal-bio-text');
+
+    // Completely clear any existing content first
+    modalVideoContainer.innerHTML = '';
+    modalBioText.innerHTML = '';
 
     // Clone video element
     const videoContainer = document.querySelector('.video-container');
     const videoClone = videoContainer.cloneNode(true);
     videoClone.style.position = 'relative'; // Remove any absolute positioning
-    modalVideoContainer.innerHTML = '';
+
+    // Remove the play icon overlay from cloned video
+    videoClone.style.setProperty('--before-content', 'none');
+    const style = document.createElement('style');
+    style.textContent = '.modal-video-container .video-container::before { display: none !important; }';
+    modalVideoContainer.appendChild(style);
     modalVideoContainer.appendChild(videoClone);
 
     // Clone bio paragraphs
     const aboutParagraphs = document.querySelectorAll('.about-paragraph');
-    modalBioText.innerHTML = '';
     aboutParagraphs.forEach(p => {
         const clone = p.cloneNode(true);
-        clone.style.display = 'block'; // Override line-clamp
+        clone.style.display = 'block'; // Override inline display
         clone.style.webkitLineClamp = 'unset';
         clone.style.webkitBoxOrient = 'unset';
         clone.style.overflow = 'visible';
@@ -131,6 +143,9 @@ function openTimelineModal(timelineItem) {
  * Generic modal open function
  */
 function openModal(modal) {
+    // Set modal open state
+    modalIsOpen = true;
+
     // Store previously focused element
     previousFocus = document.activeElement;
 
@@ -155,6 +170,9 @@ function openModal(modal) {
  */
 function closeModal(modal) {
     modal.classList.remove('active');
+
+    // Reset modal open state
+    modalIsOpen = false;
 
     // Restore body scroll
     document.body.style.overflow = '';

@@ -2049,25 +2049,32 @@ section {
         transform: scale(0.98); /* Tap feedback */
     }
 
-    /* About Me Preview Mode (collapsed) */
+    /* About Me Preview Mode - Clamp entire text block for natural flow */
+    .about-text-card .about-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 6; /* Show 6 lines total across all paragraphs */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        position: relative;
+    }
+
     .about-text-card .about-paragraph {
         font-size: 14px; /* Smaller, readable font */
         line-height: 1.5;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.35rem; /* Minimal spacing between paragraphs */
+        display: inline; /* Treat as inline for natural text flow */
     }
 
-    .about-text-card .about-paragraph:not(:first-child) {
-        display: -webkit-box;
-        -webkit-line-clamp: 2; /* Show 2 lines for paragraphs 2-3 */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .about-text-card .about-paragraph:first-child {
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* Show 3 lines for first paragraph */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+    /* Visual fade at bottom of clamped text */
+    .about-text-card .about-text::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1.5em;
+        background: linear-gradient(to bottom, transparent, var(--bg-secondary));
+        pointer-events: none;
     }
 
     /* Add "Tap to read more" indicator */
@@ -2085,14 +2092,18 @@ section {
 
     /* Video thumbnail in compact mode */
     .video-container {
-        height: 200px; /* Compact video height */
+        height: 280px; /* Increased height for portrait video */
         border-radius: 12px;
         cursor: pointer;
+        position: relative;
+        background: var(--bg-secondary); /* Fallback background */
     }
 
     .video-container video {
+        width: 100%;
         height: 100%;
         object-fit: cover;
+        object-position: center top; /* Anchor from top - prioritize face */
     }
 
     /* Add play icon overlay */
@@ -2191,6 +2202,36 @@ section {
     .btn {
         font-size: 0.9rem;
         padding: 0.75rem 1.5rem;
+    }
+
+    /* Let's Connect Section - Mobile Optimization */
+    .social-links {
+        flex-direction: column; /* Stack cards vertically */
+        align-items: center; /* Center cards */
+        gap: 1rem; /* Reduced gap */
+        padding: 0 1rem; /* Add side padding */
+    }
+
+    .social-link {
+        width: 100%; /* Full width on mobile */
+        max-width: 320px; /* But not too wide */
+        padding: 1rem 1.5rem; /* Slightly reduced padding */
+        justify-content: center; /* Center content */
+        font-size: 0.95rem; /* Slightly smaller text */
+    }
+
+    .social-link i {
+        font-size: 1.35rem; /* Slightly smaller icon */
+    }
+
+    .social-link span {
+        font-size: 0.95rem; /* Match text size */
+    }
+
+    /* Contact section title */
+    .contact-section .section-title {
+        font-size: 1.75rem; /* Consistent with other mobile titles */
+        margin-bottom: 1.5rem;
     }
 }
 
