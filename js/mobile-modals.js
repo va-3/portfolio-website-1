@@ -42,10 +42,25 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Make video tappable
+    // Make video tappable (but preserve native video controls)
     videoContainer.addEventListener('click', (e) => {
-        e.preventDefault();
-        openAboutModal();
+        // Only open modal if clicking the video element itself, not the controls
+        // The controls have their own click handlers that we shouldn't interfere with
+        const video = videoContainer.querySelector('video');
+
+        // Check if click was on the video element (not controls overlay)
+        if (e.target === video || e.target === videoContainer) {
+            // Only prevent default if not clicking play button area
+            const rect = video.getBoundingClientRect();
+            const y = e.clientY - rect.top;
+            const videoHeight = rect.height;
+
+            // If clicking bottom 15% (where controls usually are), let it through
+            if (y < videoHeight * 0.85) {
+                e.preventDefault();
+                openAboutModal();
+            }
+        }
     });
 }
 
