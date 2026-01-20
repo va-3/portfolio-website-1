@@ -217,7 +217,7 @@ function closeModal(modal, scrollToTop = false) {
     document.body.style.right = '';
     document.body.style.overflow = '';
 
-    // Small delay to ensure body styles are cleared before scrolling
+    // Delay to ensure body styles are cleared and modal animation completes
     setTimeout(() => {
         // Either scroll to top or restore previous position
         if (scrollToTop) {
@@ -226,9 +226,10 @@ function closeModal(modal, scrollToTop = false) {
                 behavior: 'smooth'
             });
         } else {
+            // Use instant scroll for position restoration (no smooth animation)
             window.scrollTo(0, parseInt(scrollY));
         }
-    }, 0);
+    }, 50); // 50ms delay ensures body styles are fully cleared
 
     // Restore focus
     if (previousFocus) {
