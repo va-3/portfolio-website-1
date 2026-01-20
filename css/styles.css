@@ -114,7 +114,7 @@ body {
     background: var(--bg-secondary);
     backdrop-filter: blur(10px);
     box-shadow: var(--card-shadow);
-    z-index: 1000;
+    z-index: 20000;
     transition: all var(--transition-base);
     border-bottom: 2px solid var(--border-color);
 
@@ -1917,6 +1917,7 @@ section {
         padding: var(--spacing-lg);
         gap: var(--spacing-md);
         grid-column: 1 / -1;
+        z-index: 20001;
     }
 
     .nav-menu.active {
