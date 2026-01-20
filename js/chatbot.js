@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatbotMessages = document.getElementById('chatbot-messages');
     const typingIndicator = document.getElementById('typing-indicator');
     const typingDots = document.getElementById('typing-dots');
-    const collapseBtn = document.getElementById('collapse-chat-btn');
     const dobbyBranding = document.querySelector('.dobby-branding');
 
     let isExpanded = false;
@@ -162,11 +161,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Chat collapsed, messages saved to storage');
     }
 
-    // Add collapse button listener
-    if (collapseBtn) {
-        collapseBtn.addEventListener('click', collapseChat);
-    }
-
     // Add navbar home button listener to close chat if open
     const navHomeButton = document.querySelector('.home-link');
     if (navHomeButton) {
@@ -174,15 +168,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isExpanded) {
                 e.preventDefault(); // Prevent default anchor behavior
                 collapseChat(); // Close the chat
-                // Let the chat close, then scroll to top
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }, 100);
             }
-            // If chat is not expanded, let the default anchor behavior work
+            // Scroll to top after closing chat or if already closed
+            setTimeout(() => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }, isExpanded ? 100 : 0);
         });
     }
 

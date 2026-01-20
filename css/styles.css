@@ -1498,35 +1498,6 @@ section {
     box-sizing: border-box; /* Include padding in height */
 }
 
-.collapse-chat-btn {
-    display: none;
-    position: absolute;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border: none;
-    background: transparent;
-    color: var(--primary-color);
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    transition: all var(--transition-base);
-}
-
-.ai-chat-card.expanded .collapse-chat-btn {
-    display: flex;
-}
-
-.collapse-chat-btn:hover {
-    background: rgba(var(--primary-color-rgb), 0.1);
-    transform: scale(1.05);
-}
-
-.collapse-chat-btn i {
-    font-size: 1rem;
-}
-
 .dobby-branding {
     display: flex;
     align-items: center;
@@ -2233,46 +2204,14 @@ section {
         border-radius: 0 !important;
     }
 
-    /* Reorganize header for fullscreen layout */
+    /* Reorganize header for fullscreen layout - center only */
     .ai-chat-card.expanded .chat-card-header {
-        display: grid !important;
-        grid-template-columns: 60px 1fr 60px !important;
+        display: flex !important;
         align-items: center !important;
-        justify-items: center !important;
+        justify-content: center !important;
         padding: 16px !important;
         height: auto !important;
         min-height: 74px !important;
-    }
-
-    /* Collapse button on the left - styled as home button */
-    .ai-chat-card.expanded .collapse-chat-btn {
-        position: static !important;
-        grid-column: 1 !important;
-        justify-self: start !important;
-        margin-left: 8px !important;
-        width: 44px !important;
-        height: 44px !important;
-        display: flex !important;
-        border-radius: 50% !important;
-        background: var(--bg-secondary) !important;
-        border: 2px solid var(--border-color) !important;
-    }
-
-    .ai-chat-card.expanded .collapse-chat-btn:hover {
-        background: var(--primary-color) !important;
-        color: white !important;
-        border-color: var(--primary-color) !important;
-    }
-
-    /* Change icon to home icon in fullscreen */
-    .ai-chat-card.expanded .collapse-chat-btn i::before {
-        content: "\f015" !important; /* Font Awesome home icon */
-    }
-
-    /* Dobby branding in the center */
-    .ai-chat-card.expanded .dobby-branding {
-        grid-column: 2 !important;
-        justify-self: center !important;
     }
 
     /* Chat messages area should fill available space */
