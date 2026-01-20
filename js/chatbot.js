@@ -167,6 +167,25 @@ document.addEventListener('DOMContentLoaded', function() {
         collapseBtn.addEventListener('click', collapseChat);
     }
 
+    // Add navbar home button listener to close chat if open
+    const navHomeButton = document.querySelector('.home-link');
+    if (navHomeButton) {
+        navHomeButton.addEventListener('click', function(e) {
+            if (isExpanded) {
+                e.preventDefault(); // Prevent default anchor behavior
+                collapseChat(); // Close the chat
+                // Let the chat close, then scroll to top
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                }, 100);
+            }
+            // If chat is not expanded, let the default anchor behavior work
+        });
+    }
+
     // Handle form submission
     chatbotForm.addEventListener('submit', async function(e) {
         e.preventDefault();
