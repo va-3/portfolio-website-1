@@ -4,12 +4,11 @@
 # CRITICAL: This file MUST exist to override Netlify's global ~/.config/mise/config.toml
 # Without this, builds hang trying to install Python 3.14.2, Ruby 3.4.8, and Go 1.25.6
 
-# Explicitly disable all tools except Node.js
-[env]
-_.python = ""
-_.ruby = ""
-_.go = ""
-
+# Empty tools section = override global config with "no tools"
 [tools]
 # Node.js is managed via NODE_VERSION environment variable in netlify.toml
 # DO NOT add nodejs here - it's handled by Netlify's NODE_VERSION setting
+
+# Settings to prevent inheriting from global config
+[settings]
+legacy_version_file = false
