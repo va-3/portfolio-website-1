@@ -2291,27 +2291,14 @@ section {
         font-size: 14px !important;
     }
 
-    /* Ensure header and logo are visible in fullscreen */
+    /* Hide Dobby branding in fullscreen */
     .ai-chat-card.expanded .chat-card-header {
         z-index: 1 !important;
         background: var(--bg-primary) !important;
     }
 
     .ai-chat-card.expanded .dobby-branding {
-        display: flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-
-    .ai-chat-card.expanded .header-dobby-logo {
-        display: block !important;
-        width: 50px !important;
-        height: 50px !important;
-    }
-
-    .ai-chat-card.expanded .dobby-text {
-        display: inline-block !important;
-        opacity: 1 !important;
+        display: none !important;
     }
 
     .chatbot-container {

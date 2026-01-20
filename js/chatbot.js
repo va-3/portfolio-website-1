@@ -53,9 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Make input readonly on mobile to prevent zoom on initial tap
-    if (window.innerWidth <= 768) {
-        chatbotInput.setAttribute('readonly', 'readonly');
+    // Attach expansion event listeners
+    function attachExpansionListeners() {
+        // Make input readonly on mobile to prevent zoom on initial tap
+        if (window.innerWidth <= 768) {
+            chatbotInput.setAttribute('readonly', 'readonly');
+            chatbotInput.addEventListener('touchstart', expandChat, { passive: false });
+        }
+        chatbotInput.addEventListener('focus', expandChat);
+        chatbotInput.addEventListener('click', expandChat);
     }
 
     // Expand chat on input focus or click
@@ -104,27 +110,19 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset scroll position to top when opening modal
             chatbotMessages.scrollTop = 0;
 
-            // On mobile, enable input after expansion and remove expansion listeners
+            // On mobile, enable input after expansion
             if (window.innerWidth <= 768) {
                 setTimeout(() => {
                     // Remove readonly to enable typing
                     chatbotInput.removeAttribute('readonly');
-                    // Remove expansion listeners
-                    chatbotInput.removeEventListener('touchstart', expandChat);
-                    chatbotInput.removeEventListener('focus', expandChat);
-                    chatbotInput.removeEventListener('click', expandChat);
                     console.log('Input enabled for typing');
                 }, 300);
             }
         }
     }
 
-    // Prevent focus from triggering zoom on mobile
-    if (window.innerWidth <= 768) {
-        chatbotInput.addEventListener('touchstart', expandChat, { passive: false });
-    }
-    chatbotInput.addEventListener('focus', expandChat);
-    chatbotInput.addEventListener('click', expandChat);
+    // Initialize expansion listeners on page load
+    attachExpansionListeners();
 
     // Scroll to top when clicking Dobby branding/logo
     if (dobbyBranding && chatbotMessages) {
@@ -160,6 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth'
                 });
             }, 100);
+
+            // Reset readonly state for next open
+            chatbotInput.setAttribute('readonly', 'readonly');
         }
 
         // Clear DOM but keep sessionStorage (will restore on expand)
