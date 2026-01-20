@@ -179,6 +179,30 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Add listeners to all navigation links (About, Experience, Gallery, Contact)
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            if (isExpanded) {
+                e.preventDefault(); // Prevent default anchor behavior
+                const targetId = this.getAttribute('href'); // Get the href (e.g., #about)
+                collapseChat(); // Close the chat first
+
+                // After chat closes, scroll to the target section
+                setTimeout(() => {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                }, 100);
+            }
+            // If chat is not expanded, let the default anchor behavior work
+        });
+    });
+
     // Handle form submission
     chatbotForm.addEventListener('submit', async function(e) {
         e.preventDefault();
