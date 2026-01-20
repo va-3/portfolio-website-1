@@ -183,13 +183,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }, 100);
             } else if (!isExpanded && !isFullscreenModalOpen()) {
-                // No chat or modal open, allow default scroll to top
-                setTimeout(() => {
-                    window.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                }, 0);
+                // No chat or modal open - but DON'T scroll if preventDefault was called
+                // (means another handler like mobile-modals.js is managing the scroll)
+                if (!e.defaultPrevented) {
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    }, 0);
+                }
             }
             // If fullscreen modal is open, let mobile-modals.js handle it
         });

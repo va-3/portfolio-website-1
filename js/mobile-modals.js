@@ -217,17 +217,17 @@ function closeModal(modal, scrollToTop = false) {
     document.body.style.right = '';
     document.body.style.overflow = '';
 
-    // Use requestAnimationFrame to ensure scroll happens after repaint
+    // Use double requestAnimationFrame to ensure scroll happens after repaint
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-            // Either scroll to top or restore previous position
             if (scrollToTop) {
+                // Scroll to top with smooth animation
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
                 });
             } else {
-                // Use instant scroll for position restoration (no smooth animation)
+                // Restore previous scroll position instantly (no animation)
                 window.scrollTo(0, parseInt(scrollY));
             }
         });
