@@ -217,19 +217,21 @@ function closeModal(modal, scrollToTop = false) {
     document.body.style.right = '';
     document.body.style.overflow = '';
 
-    // Delay to ensure body styles are cleared and modal animation completes
-    setTimeout(() => {
-        // Either scroll to top or restore previous position
-        if (scrollToTop) {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        } else {
-            // Use instant scroll for position restoration (no smooth animation)
-            window.scrollTo(0, parseInt(scrollY));
-        }
-    }, 50); // 50ms delay ensures body styles are fully cleared
+    // Use requestAnimationFrame to ensure scroll happens after repaint
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            // Either scroll to top or restore previous position
+            if (scrollToTop) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            } else {
+                // Use instant scroll for position restoration (no smooth animation)
+                window.scrollTo(0, parseInt(scrollY));
+            }
+        });
+    });
 
     // Restore focus
     if (previousFocus) {
