@@ -732,7 +732,8 @@ section {
     z-index: 10;
     will-change: transform;
     opacity: 1;
-    /* Remove transition to let JS handle smooth animation */
+    /* Smooth interpolation for rapid scroll events (100ms easing) */
+    transition: transform 0.1s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 [data-theme="dark"] .timeline-dot-animated {
@@ -1940,11 +1941,11 @@ section {
     }
 
     .hero-image {
-        order: 3; /* Profile image third (below Dobby) */
+        order: 2; /* Profile image second (below text, above Dobby) */
     }
 
     .ai-chat-card {
-        order: 2; /* Dobby chatbot second (above profile image) */
+        order: 3; /* Dobby chatbot last (below profile image) */
         margin-top: 1rem;
     }
 
