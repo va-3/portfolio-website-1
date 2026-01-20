@@ -53,6 +53,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Make input readonly on mobile to prevent zoom on initial tap
+    if (window.innerWidth <= 768) {
+        chatbotInput.setAttribute('readonly', 'readonly');
+    }
+
     // Expand chat on input focus or click
     function expandChat(e) {
         if (!isExpanded) {
@@ -61,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // Prevent default to stop mobile zoom/scroll to input
             if (e && window.innerWidth <= 768) {
                 e.preventDefault();
-                // Blur the input to prevent keyboard and zoom
+                e.stopPropagation();
+                // Blur the input immediately to prevent keyboard
                 if (chatbotInput === document.activeElement) {
                     chatbotInput.blur();
                 }
@@ -98,12 +104,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset scroll position to top when opening modal
             chatbotMessages.scrollTop = 0;
 
-            // On mobile, after expansion, allow focus without triggering expansion again
+            // On mobile, enable input after expansion and remove expansion listeners
             if (window.innerWidth <= 768) {
                 setTimeout(() => {
+                    // Remove readonly to enable typing
+                    chatbotInput.removeAttribute('readonly');
+                    // Remove expansion listeners
+                    chatbotInput.removeEventListener('touchstart', expandChat);
                     chatbotInput.removeEventListener('focus', expandChat);
                     chatbotInput.removeEventListener('click', expandChat);
-                }, 100);
+                    console.log('Input enabled for typing');
+                }, 300);
             }
         }
     }
