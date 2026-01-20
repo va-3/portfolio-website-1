@@ -2483,13 +2483,19 @@ section {
 /* About Me Modal Specific Styles */
 
 /* Native fullscreen video styling - prevents zoom/crop on mobile */
+.video-container video:fullscreen,
+.video-container video:-webkit-full-screen,
+.video-container video:-moz-full-screen,
+.video-container video:-ms-fullscreen,
 video:fullscreen,
 video:-webkit-full-screen,
 video:-moz-full-screen,
 video:-ms-fullscreen {
-    object-fit: contain; /* Show complete video without cropping */
-    width: 100%;
-    height: 100%;
+    object-fit: contain !important; /* Show complete video without cropping */
+    object-position: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: none !important; /* Allow full height in fullscreen */
 }
 
 /* Backdrop for fullscreen video (black bars for letterboxing) */
