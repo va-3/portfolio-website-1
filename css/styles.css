@@ -2214,16 +2214,54 @@ section {
         width: 280px; /* Smaller collapsed chatbot */
     }
 
-    /* Expanded chat should be centered and overlay on mobile */
+    /* Expanded chat should be true fullscreen on mobile */
     .ai-chat-card.expanded {
         position: fixed !important;
-        top: 50% !important;
-        left: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        z-index: 9999 !important;
-        width: 90vw !important;
-        max-width: 400px !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        max-width: none !important;
+        max-height: none !important;
+        min-height: 100% !important;
+        transform: none !important;
+        z-index: 10000 !important;
         margin: 0 !important;
+        border-radius: 0 !important;
+    }
+
+    /* Reorganize header for fullscreen layout */
+    .ai-chat-card.expanded .chat-card-header {
+        display: grid !important;
+        grid-template-columns: 60px 1fr 60px !important;
+        align-items: center !important;
+        justify-items: center !important;
+        padding: 16px !important;
+        height: auto !important;
+        min-height: 74px !important;
+    }
+
+    /* Collapse button on the left */
+    .ai-chat-card.expanded .collapse-chat-btn {
+        grid-column: 1 !important;
+        justify-self: start !important;
+        margin-left: 8px !important;
+    }
+
+    /* Dobby branding in the center */
+    .ai-chat-card.expanded .dobby-branding {
+        grid-column: 2 !important;
+        justify-self: center !important;
+    }
+
+    /* Chat messages area should fill available space */
+    .ai-chat-card.expanded .chat-messages-area {
+        height: auto !important;
+        flex: 1 !important;
+        min-height: 0 !important;
+        max-height: none !important;
     }
 
     /* Reduce placeholder text size for mobile */
