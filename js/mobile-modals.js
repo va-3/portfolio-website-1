@@ -45,6 +45,18 @@ function initAboutModal() {
 
     // Listen for fullscreen changes to handle video styling and state
     if (video) {
+        // Preemptively apply styles when fullscreen button is clicked
+        video.addEventListener('click', (e) => {
+            // Check if user clicked the fullscreen button (not just play)
+            const isFullscreenButtonClick = e.target === video && video.paused === false;
+            if (isFullscreenButtonClick) {
+                console.log('Video clicked - preemptively applying contain styles');
+                video.style.objectFit = 'contain';
+                video.style.objectPosition = 'center';
+            }
+        });
+
+        // Listen for all fullscreen change events
         document.addEventListener('fullscreenchange', () => handleFullscreenChange(video));
         document.addEventListener('webkitfullscreenchange', () => handleFullscreenChange(video));
         document.addEventListener('mozfullscreenchange', () => handleFullscreenChange(video));
@@ -57,21 +69,29 @@ function initAboutModal() {
  */
 function handleFullscreenChange(video) {
     // Check if we're in fullscreen mode
-    const isFullscreen = document.fullscreenElement ||
-                        document.webkitFullscreenElement ||
-                        document.mozFullScreenElement ||
-                        document.msFullscreenElement;
+    const fullscreenElement = document.fullscreenElement ||
+                             document.webkitFullscreenElement ||
+                             document.mozFullScreenElement ||
+                             document.msFullscreenElement;
 
-    if (isFullscreen && video) {
-        // Entering fullscreen - force correct object-fit styling
-        video.style.objectFit = 'contain';
-        video.style.objectPosition = 'center';
-        video.style.width = '100%';
-        video.style.height = '100%';
-        video.style.maxHeight = 'none';
-        video.style.backgroundColor = '#000';
-        console.log('Fullscreen entered: Applied contain styling');
-    } else if (video) {
+    console.log('Fullscreen change detected:', {
+        fullscreenElement: fullscreenElement,
+        fullscreenElementTag: fullscreenElement?.tagName,
+        videoElement: video,
+        isVideoFullscreen: fullscreenElement === video
+    });
+
+    if (fullscreenElement && fullscreenElement.tagName === 'VIDEO') {
+        // Entering fullscreen - force correct object-fit styling directly on the fullscreen video element
+        const fullscreenVideo = fullscreenElement;
+        fullscreenVideo.style.objectFit = 'contain';
+        fullscreenVideo.style.objectPosition = 'center';
+        fullscreenVideo.style.width = '100%';
+        fullscreenVideo.style.height = '100%';
+        fullscreenVideo.style.maxHeight = 'none';
+        fullscreenVideo.style.backgroundColor = '#000';
+        console.log('Fullscreen entered: Applied contain styling to', fullscreenVideo);
+    } else if (!fullscreenElement && video) {
         // Exiting fullscreen - reset video to initial state
         video.pause();
         video.currentTime = 0;
