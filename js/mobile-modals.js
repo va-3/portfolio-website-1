@@ -33,35 +33,16 @@ function initMobileModals() {
  */
 function initAboutModal() {
     const aboutCard = document.querySelector('.about-text-card');
-    const videoContainer = document.querySelector('.video-container');
 
-    if (!aboutCard || !videoContainer) return;
+    if (!aboutCard) return;
 
     // Make About Me card tappable
     aboutCard.addEventListener('click', () => {
         openAboutModal();
     });
 
-    // Make video tappable (but preserve native video controls)
-    videoContainer.addEventListener('click', (e) => {
-        // Only open modal if clicking the video element itself, not the controls
-        // The controls have their own click handlers that we shouldn't interfere with
-        const video = videoContainer.querySelector('video');
-
-        // Check if click was on the video element (not controls overlay)
-        if (e.target === video || e.target === videoContainer) {
-            // Only prevent default if not clicking play button area
-            const rect = video.getBoundingClientRect();
-            const y = e.clientY - rect.top;
-            const videoHeight = rect.height;
-
-            // If clicking bottom 15% (where controls usually are), let it through
-            if (y < videoHeight * 0.85) {
-                e.preventDefault();
-                openAboutModal();
-            }
-        }
-    });
+    // Video now uses native controls - no custom click handler needed
+    // Tapping the video will play/pause, and users can use native fullscreen button
 }
 
 /**
