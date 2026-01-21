@@ -324,60 +324,41 @@ window.addEventListener('resize', handleResize);
  * Applies on ALL screen sizes, not just mobile
  */
 function initUniversalFullscreenVideo() {
+    // Skip on mobile - mobile-modals.js handles it
+    if (window.innerWidth <= 768) {
+        console.log('[Fullscreen] Skipping desktop handler on mobile viewport');
+        return;
+    }
+
     const videos = document.querySelectorAll('.video-container video');
 
     videos.forEach(video => {
-        // No localStorage persistence - video always resets to 0:00
-
-        // Track iOS fullscreen state (iOS doesn't update document.fullscreenElement)
-        let isIOSFullscreen = false;
-
-        // Helper function to check if video is in fullscreen
-        const isVideoFullscreen = () => {
-            return isIOSFullscreen ||
-                   document.fullscreenElement === video ||
-                   document.webkitFullscreenElement === video ||
-                   document.mozFullScreenElement === video;
-        };
-
-        // iOS-specific fullscreen events
-        video.addEventListener('webkitbeginfullscreen', () => {
-            isIOSFullscreen = true;
-            console.log('[Fullscreen] iOS fullscreen started');
-        });
-
-        video.addEventListener('webkitendfullscreen', () => {
-            isIOSFullscreen = false;
-            console.log('[Fullscreen] iOS fullscreen ended - resetting video');
-            // Reset video on iOS when exiting fullscreen
-            video.pause();
+        // Reset video when it ends
+        video.addEventListener('ended', () => {
             video.currentTime = 0;
             video.load();
+            console.log('[Desktop Video] Video ended - reset to start');
         });
 
-        // Click handler - enter fullscreen OR pause/play if already fullscreen
+        // Desktop: Click to play, will go fullscreen automatically on iOS
+        // or use requestFullscreen on desktop browsers
         video.addEventListener('click', (e) => {
-            const isFullscreen = isVideoFullscreen();
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
 
             if (!isFullscreen) {
-                // Not in fullscreen - enter fullscreen mode
-                e.preventDefault();
-                e.stopPropagation();
-
-                // Try iOS-specific video fullscreen first (for mobile Safari)
-                if (video.webkitEnterFullscreen && typeof video.webkitEnterFullscreen === 'function') {
-                    console.log('[Fullscreen] Using iOS webkitEnterFullscreen');
-                    try {
-                        video.webkitEnterFullscreen();
-                        // Video will auto-play when entering fullscreen on iOS
-                    } catch (err) {
-                        console.error('[Fullscreen] iOS fullscreen failed:', err);
-                    }
-                } else if (video.requestFullscreen) {
+                // Try fullscreen API (desktop browsers)
+                if (video.requestFullscreen) {
                     video.requestFullscreen().then(() => {
                         video.play();
                     }).catch(err => {
-                        console.error('[Fullscreen] requestFullscreen failed:', err);
+                        // If fullscreen fails, just play (iOS will handle it)
+                        console.log('[Desktop Video] Fullscreen unavailable, playing normally');
+                        video.play();
                     });
                 } else if (video.webkitRequestFullscreen) {
                     video.webkitRequestFullscreen();
@@ -385,51 +366,19 @@ function initUniversalFullscreenVideo() {
                 } else if (video.mozRequestFullScreen) {
                     video.mozRequestFullScreen();
                     setTimeout(() => video.play(), 100);
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                    setTimeout(() => video.play(), 100);
                 } else {
-                    console.warn('[Fullscreen] No fullscreen API available');
+                    // No fullscreen API, just play
+                    video.play();
                 }
 
-                console.log('[Fullscreen] User clicked video - entering fullscreen mode');
+                console.log('[Desktop Video] Clicked - attempting fullscreen play');
             } else {
-                // Already in fullscreen - toggle pause/play (non-iOS only)
-                // iOS native fullscreen has its own controls, so skip this
-                if (!isIOSFullscreen) {
-                    const rect = video.getBoundingClientRect();
-                    const clickY = e.clientY - rect.top; // Y position relative to video top
-                    const videoHeight = rect.height;
-                    const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
-
-                    // Only toggle if click is in top 85% (not on control bar)
-                    if (clickY < controlBarThreshold) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        if (video.paused) {
-                            video.play();
-                            console.log('[Fullscreen] User clicked to play');
-                        } else {
-                            video.pause();
-                            console.log('[Fullscreen] User clicked to pause');
-                        }
-                    }
+                // In fullscreen, toggle pause/play
+                if (video.paused) {
+                    video.play();
+                } else {
+                    video.pause();
                 }
-            }
-        });
-
-        // Prevent default play behavior on click
-        video.addEventListener('play', (e) => {
-            const isFullscreen = document.fullscreenElement === video ||
-                               document.webkitFullscreenElement === video ||
-                               document.mozFullScreenElement === video;
-
-            // Only allow play if already in fullscreen
-            if (!isFullscreen) {
-                e.preventDefault();
-                video.pause();
-                console.log('[Fullscreen] Prevented inline play - use fullscreen only');
             }
         });
 

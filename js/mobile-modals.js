@@ -43,146 +43,52 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Mobile click-to-fullscreen functionality (same as desktop)
+    // Simple mobile video: tap to play, iOS will handle fullscreen automatically
     if (video) {
-        // No localStorage persistence - video always resets to 0:00
-
-        // Track iOS fullscreen state (iOS doesn't update document.fullscreenElement)
-        let isIOSFullscreen = false;
-
-        // Helper function to check if video is in fullscreen
-        const isVideoFullscreen = () => {
-            return isIOSFullscreen ||
-                   document.fullscreenElement === video ||
-                   document.webkitFullscreenElement === video ||
-                   document.mozFullScreenElement === video;
-        };
-
-        // Helper function to enter fullscreen
-        const enterFullscreen = () => {
-            // iOS Safari requires webkitEnterFullscreen() specifically for video elements
-            if (video.webkitEnterFullscreen && typeof video.webkitEnterFullscreen === 'function') {
-                console.log('[Mobile Fullscreen] Using iOS webkitEnterFullscreen');
-                try {
-                    video.webkitEnterFullscreen();
-                    // Video will auto-play when entering fullscreen on iOS
-                } catch (err) {
-                    console.error('[Mobile Fullscreen] iOS fullscreen failed:', err);
-                }
-            } else if (video.requestFullscreen) {
-                video.requestFullscreen().then(() => {
-                    video.play();
-                }).catch(err => {
-                    console.error('[Mobile Fullscreen] requestFullscreen failed:', err);
-                });
-            } else if (video.webkitRequestFullscreen) {
-                video.webkitRequestFullscreen();
-                setTimeout(() => video.play(), 100);
-            } else if (video.mozRequestFullScreen) {
-                video.mozRequestFullScreen();
-                setTimeout(() => video.play(), 100);
-            } else if (video.msRequestFullscreen) {
-                video.msRequestFullscreen();
-                setTimeout(() => video.play(), 100);
-            } else {
-                console.warn('[Mobile Fullscreen] No fullscreen API available');
-            }
-            console.log('[Mobile Fullscreen] Entering fullscreen mode');
-        };
-
-        // iOS-specific fullscreen events
-        video.addEventListener('webkitbeginfullscreen', () => {
-            isIOSFullscreen = true;
-            console.log('[Mobile Fullscreen] iOS fullscreen started');
-        });
-
-        video.addEventListener('webkitendfullscreen', () => {
-            isIOSFullscreen = false;
-            console.log('[Mobile Fullscreen] iOS fullscreen ended - resetting video');
-            // Reset video on iOS when exiting fullscreen
-            video.pause();
+        // Track when video ends to reset it
+        video.addEventListener('ended', () => {
             video.currentTime = 0;
-            video.load();
+            video.load(); // Show poster again
+            console.log('[Mobile Video] Video ended - reset to start');
         });
 
-        // Helper function to toggle play/pause in fullscreen
-        const togglePlayPause = (clientY) => {
-            const rect = video.getBoundingClientRect();
-            const clickY = clientY - rect.top;
-            const videoHeight = rect.height;
-            const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
-
-            // Only toggle if click is in top 85% (not on control bar)
-            if (clickY < controlBarThreshold) {
-                if (video.paused) {
-                    video.play();
-                    console.log('[Mobile Fullscreen] User tapped to play');
-                } else {
-                    video.pause();
-                    console.log('[Mobile Fullscreen] User tapped to pause');
-                }
-                return true; // Handled
-            }
-            return false; // Not handled (clicked on control bar)
-        };
-
-        // Touch event for immediate response (no 300ms delay)
+        // Touch event for immediate response
         video.addEventListener('touchend', (e) => {
-            if (!isVideoFullscreen()) {
-                // Not in fullscreen - enter fullscreen mode
-                e.preventDefault(); // Prevent delayed click event
-                e.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
 
-                // Add visual feedback
-                const videoContainer = video.closest('.video-container');
-                if (videoContainer) {
-                    videoContainer.style.opacity = '0.8';
-                    setTimeout(() => {
-                        videoContainer.style.opacity = '1';
-                    }, 150);
-                }
+            // Add visual feedback
+            const videoContainer = video.closest('.video-container');
+            if (videoContainer) {
+                videoContainer.style.opacity = '0.8';
+                setTimeout(() => {
+                    videoContainer.style.opacity = '1';
+                }, 150);
+            }
 
-                enterFullscreen();
+            // Simply play the video - iOS will handle fullscreen automatically
+            // (because we removed playsinline attribute)
+            if (video.paused) {
+                video.play().then(() => {
+                    console.log('[Mobile Video] Playing - iOS will enter fullscreen');
+                }).catch(err => {
+                    console.error('[Mobile Video] Play failed:', err);
+                });
             } else {
-                // Already in fullscreen - toggle pause/play (non-iOS only)
-                // iOS native fullscreen has its own controls, so skip this
-                if (!isIOSFullscreen) {
-                    const touch = e.changedTouches[0];
-                    if (togglePlayPause(touch.clientY)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                }
+                video.pause();
+                console.log('[Mobile Video] Paused');
             }
         }, { passive: false });
 
-        // Click event fallback for non-touch devices
+        // Click event fallback
         video.addEventListener('click', (e) => {
-            if (!isVideoFullscreen()) {
-                e.preventDefault();
-                e.stopPropagation();
-                enterFullscreen();
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (video.paused) {
+                video.play();
             } else {
-                // Already in fullscreen - toggle pause/play (non-iOS only)
-                if (!isIOSFullscreen) {
-                    if (togglePlayPause(e.clientY)) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                }
-            }
-        });
-
-        // Prevent default play behavior on click
-        video.addEventListener('play', (e) => {
-            const isFullscreen = document.fullscreenElement === video ||
-                               document.webkitFullscreenElement === video ||
-                               document.mozFullScreenElement === video;
-
-            if (!isFullscreen) {
-                e.preventDefault();
                 video.pause();
-                console.log('[Mobile Fullscreen] Prevented inline play - use fullscreen only');
             }
         });
 
