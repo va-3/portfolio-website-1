@@ -340,14 +340,26 @@ function initUniversalFullscreenVideo() {
                 e.preventDefault();
                 e.stopPropagation();
 
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
+                // Try iOS-specific video fullscreen first (for mobile Safari)
+                if (video.webkitEnterFullscreen && typeof video.webkitEnterFullscreen === 'function') {
+                    console.log('[Fullscreen] Using iOS webkitEnterFullscreen');
+                    try {
+                        video.webkitEnterFullscreen();
+                    } catch (err) {
+                        console.error('[Fullscreen] iOS fullscreen failed:', err);
+                    }
+                } else if (video.requestFullscreen) {
+                    video.requestFullscreen().catch(err => {
+                        console.error('[Fullscreen] requestFullscreen failed:', err);
+                    });
                 } else if (video.webkitRequestFullscreen) {
                     video.webkitRequestFullscreen();
                 } else if (video.mozRequestFullScreen) {
                     video.mozRequestFullScreen();
                 } else if (video.msRequestFullscreen) {
                     video.msRequestFullscreen();
+                } else {
+                    console.warn('[Fullscreen] No fullscreen API available');
                 }
 
                 console.log('[Fullscreen] User clicked video - entering fullscreen mode');

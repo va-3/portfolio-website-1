@@ -49,14 +49,26 @@ function initAboutModal() {
 
         // Helper function to enter fullscreen
         const enterFullscreen = () => {
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
+            // iOS Safari requires webkitEnterFullscreen() specifically for video elements
+            if (video.webkitEnterFullscreen && typeof video.webkitEnterFullscreen === 'function') {
+                console.log('[Mobile Fullscreen] Using iOS webkitEnterFullscreen');
+                try {
+                    video.webkitEnterFullscreen();
+                } catch (err) {
+                    console.error('[Mobile Fullscreen] iOS fullscreen failed:', err);
+                }
+            } else if (video.requestFullscreen) {
+                video.requestFullscreen().catch(err => {
+                    console.error('[Mobile Fullscreen] requestFullscreen failed:', err);
+                });
             } else if (video.webkitRequestFullscreen) {
                 video.webkitRequestFullscreen();
             } else if (video.mozRequestFullScreen) {
                 video.mozRequestFullScreen();
             } else if (video.msRequestFullscreen) {
                 video.msRequestFullscreen();
+            } else {
+                console.warn('[Mobile Fullscreen] No fullscreen API available');
             }
             console.log('[Mobile Fullscreen] Entering fullscreen mode');
         };
