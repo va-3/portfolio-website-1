@@ -313,3 +313,179 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.addEventListener('scroll', requestTimelineUpdate, { passive: true });
 window.addEventListener('resize', handleResize);
+
+// ===================================
+// Universal Fullscreen Video Handler
+// Works on ALL devices (desktop + mobile)
+// ===================================
+
+/**
+ * Handle fullscreen video with letterboxing to show complete frame
+ * Applies on ALL screen sizes, not just mobile
+ */
+function initUniversalFullscreenVideo() {
+    const videos = document.querySelectorAll('.video-container video');
+
+    videos.forEach(video => {
+        // Generate unique storage key for this video
+        const videoId = video.src || 'about-video';
+        const storageKey = `video-progress-${videoId}`;
+
+        // Restore saved progress on page load
+        const savedProgress = localStorage.getItem(storageKey);
+        if (savedProgress) {
+            const savedTime = parseFloat(savedProgress);
+            video.currentTime = savedTime;
+            console.log(`[Video Progress] Restored saved position: ${savedTime.toFixed(2)}s`);
+        }
+
+        // Save progress as video plays (debounced to avoid excessive writes)
+        let saveTimeout;
+        video.addEventListener('timeupdate', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                // Don't save if at the very end (within 2 seconds)
+                if (video.duration - video.currentTime > 2) {
+                    localStorage.setItem(storageKey, video.currentTime.toString());
+                }
+            }, 1000); // Save every 1 second of playback
+        });
+
+        // Clear saved progress when video ends
+        video.addEventListener('ended', () => {
+            localStorage.removeItem(storageKey);
+            console.log('[Video Progress] Video completed - cleared saved progress');
+        });
+
+        // Click to fullscreen - prevent inline playback
+        video.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Enter fullscreen mode
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+
+            console.log('[Fullscreen] User clicked video - entering fullscreen mode');
+        });
+
+        // Prevent default play behavior on click
+        video.addEventListener('play', (e) => {
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
+
+            // Only allow play if already in fullscreen
+            if (!isFullscreen) {
+                e.preventDefault();
+                video.pause();
+                console.log('[Fullscreen] Prevented inline play - use fullscreen only');
+            }
+        });
+
+        // Listen for all fullscreen change events (all vendor prefixes)
+        document.addEventListener('fullscreenchange', () => handleVideoFullscreen(video));
+        document.addEventListener('webkitfullscreenchange', () => handleVideoFullscreen(video));
+        document.addEventListener('mozfullscreenchange', () => handleVideoFullscreen(video));
+        document.addEventListener('MSFullscreenChange', () => handleVideoFullscreen(video));
+
+        console.log('[Fullscreen Init] Attached click-to-fullscreen handler with progress saving');
+    });
+}
+
+/**
+ * Apply fullscreen styles with maximum priority to force letterboxing
+ */
+function handleVideoFullscreen(video) {
+    const fullscreenElement = document.fullscreenElement ||
+                             document.webkitFullscreenElement ||
+                             document.mozFullScreenElement ||
+                             document.msFullscreenElement;
+
+    console.log('[Fullscreen] State change detected:', {
+        fullscreenElement: fullscreenElement?.tagName,
+        isVideo: fullscreenElement === video,
+        videoSrc: video?.src
+    });
+
+    if (fullscreenElement && fullscreenElement === video) {
+        // Entering fullscreen - force letterboxing with !important
+        console.log('[Fullscreen] Entering fullscreen mode - applying letterbox styles');
+
+        // Use requestAnimationFrame to ensure timing after fullscreen transition
+        requestAnimationFrame(() => {
+            // Apply styles with maximum priority (!important flag)
+            video.style.setProperty('object-fit', 'contain', 'important');
+            video.style.setProperty('object-position', 'center center', 'important');
+
+            // Force aspect ratio preservation with letterboxing
+            video.style.setProperty('max-width', '100vw', 'important');
+            video.style.setProperty('max-height', '100vh', 'important');
+            video.style.setProperty('width', 'auto', 'important');
+            video.style.setProperty('height', 'auto', 'important');
+
+            // Center the video in fullscreen viewport
+            video.style.setProperty('position', 'absolute', 'important');
+            video.style.setProperty('top', '50%', 'important');
+            video.style.setProperty('left', '50%', 'important');
+            video.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+
+            // Black background for letterboxing
+            video.style.setProperty('background-color', '#000', 'important');
+
+            // Force repaint to ensure styles apply immediately
+            void video.offsetHeight;
+
+            // Auto-play video in fullscreen with controls
+            video.controls = true;
+            video.play().catch(err => {
+                console.warn('[Fullscreen] Auto-play blocked:', err);
+            });
+
+            // Debug: verify applied styles
+            const computed = getComputedStyle(video);
+            console.log('[Fullscreen] Styles applied:', {
+                objectFit: computed.objectFit,
+                objectPosition: computed.objectPosition,
+                width: computed.width,
+                height: computed.height,
+                position: computed.position,
+                transform: computed.transform
+            });
+        });
+    } else if (!fullscreenElement && video) {
+        // Exiting fullscreen - remove all inline styles, keep progress saved
+        console.log('[Fullscreen] Exiting fullscreen mode - restoring normal styles');
+
+        // Pause video but DON'T reset currentTime (progress is saved in localStorage)
+        video.pause();
+        video.controls = false; // Remove controls when exiting fullscreen
+
+        // Note: We don't call video.load() or reset currentTime
+        // Progress is preserved in localStorage and will resume on next click
+
+        video.style.removeProperty('object-fit');
+        video.style.removeProperty('object-position');
+        video.style.removeProperty('width');
+        video.style.removeProperty('height');
+        video.style.removeProperty('max-width');
+        video.style.removeProperty('max-height');
+        video.style.removeProperty('position');
+        video.style.removeProperty('top');
+        video.style.removeProperty('left');
+        video.style.removeProperty('transform');
+        video.style.removeProperty('background-color');
+
+        console.log('[Fullscreen] Normal styles restored, progress saved at', video.currentTime.toFixed(2) + 's');
+    }
+}
+
+// Initialize universal fullscreen handler on page load
+document.addEventListener('DOMContentLoaded', initUniversalFullscreenVideo);

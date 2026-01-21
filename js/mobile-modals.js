@@ -43,16 +43,66 @@ function initAboutModal() {
         openAboutModal();
     });
 
-    // Listen for fullscreen changes to handle video styling and state
+    // Mobile click-to-fullscreen functionality (same as desktop)
     if (video) {
-        // Preemptively apply styles when fullscreen button is clicked
+        // Generate unique storage key for progress saving
+        const videoId = video.src || 'about-video-mobile';
+        const storageKey = `video-progress-${videoId}`;
+
+        // Restore saved progress on page load
+        const savedProgress = localStorage.getItem(storageKey);
+        if (savedProgress) {
+            const savedTime = parseFloat(savedProgress);
+            video.currentTime = savedTime;
+            console.log(`[Mobile Video Progress] Restored saved position: ${savedTime.toFixed(2)}s`);
+        }
+
+        // Save progress as video plays (debounced)
+        let saveTimeout;
+        video.addEventListener('timeupdate', () => {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                if (video.duration - video.currentTime > 2) {
+                    localStorage.setItem(storageKey, video.currentTime.toString());
+                }
+            }, 1000);
+        });
+
+        // Clear saved progress when video ends
+        video.addEventListener('ended', () => {
+            localStorage.removeItem(storageKey);
+            console.log('[Mobile Video Progress] Video completed - cleared saved progress');
+        });
+
+        // Click to fullscreen - prevent inline playback
         video.addEventListener('click', (e) => {
-            // Check if user clicked the fullscreen button (not just play)
-            const isFullscreenButtonClick = e.target === video && video.paused === false;
-            if (isFullscreenButtonClick) {
-                console.log('Video clicked - preemptively applying contain styles');
-                video.style.objectFit = 'contain';
-                video.style.objectPosition = 'center';
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Enter fullscreen mode
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) {
+                video.webkitRequestFullscreen();
+            } else if (video.mozRequestFullScreen) {
+                video.mozRequestFullScreen();
+            } else if (video.msRequestFullscreen) {
+                video.msRequestFullscreen();
+            }
+
+            console.log('[Mobile Fullscreen] User clicked video - entering fullscreen mode');
+        });
+
+        // Prevent default play behavior on click
+        video.addEventListener('play', (e) => {
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
+
+            if (!isFullscreen) {
+                e.preventDefault();
+                video.pause();
+                console.log('[Mobile Fullscreen] Prevented inline play - use fullscreen only');
             }
         });
 
@@ -66,6 +116,7 @@ function initAboutModal() {
 
 /**
  * Handle video state and styling when entering/exiting fullscreen
+ * Enhanced with !important flags and proper timing for maximum browser compatibility
  */
 function handleFullscreenChange(video) {
     // Check if we're in fullscreen mode
@@ -74,7 +125,7 @@ function handleFullscreenChange(video) {
                              document.mozFullScreenElement ||
                              document.msFullscreenElement;
 
-    console.log('Fullscreen change detected:', {
+    console.log('[Fullscreen Debug] Change detected:', {
         fullscreenElement: fullscreenElement,
         fullscreenElementTag: fullscreenElement?.tagName,
         videoElement: video,
@@ -82,29 +133,74 @@ function handleFullscreenChange(video) {
     });
 
     if (fullscreenElement && fullscreenElement.tagName === 'VIDEO') {
-        // Entering fullscreen - force correct object-fit styling directly on the fullscreen video element
+        // Entering fullscreen - apply styles with maximum priority using !important
         const fullscreenVideo = fullscreenElement;
-        fullscreenVideo.style.objectFit = 'contain';
-        fullscreenVideo.style.objectPosition = 'center';
-        fullscreenVideo.style.width = '100%';
-        fullscreenVideo.style.height = '100%';
-        fullscreenVideo.style.maxHeight = 'none';
-        fullscreenVideo.style.backgroundColor = '#000';
-        console.log('Fullscreen entered: Applied contain styling to', fullscreenVideo);
-    } else if (!fullscreenElement && video) {
-        // Exiting fullscreen - reset video to initial state
-        video.pause();
-        video.currentTime = 0;
-        video.load(); // Reload to show poster image
 
-        // Remove inline styles to let CSS take over
-        video.style.objectFit = '';
-        video.style.objectPosition = '';
-        video.style.width = '';
-        video.style.height = '';
-        video.style.maxHeight = '';
-        video.style.backgroundColor = '';
-        console.log('Fullscreen exited: Reset video state');
+        // Use requestAnimationFrame to ensure timing after fullscreen transition completes
+        requestAnimationFrame(() => {
+            // setProperty with 'important' flag gives highest CSS priority (beats all other rules)
+            fullscreenVideo.style.setProperty('object-fit', 'contain', 'important');
+            fullscreenVideo.style.setProperty('object-position', 'center center', 'important');
+
+            // Force aspect ratio preservation with letterboxing
+            fullscreenVideo.style.setProperty('max-width', '100vw', 'important');
+            fullscreenVideo.style.setProperty('max-height', '100vh', 'important');
+            fullscreenVideo.style.setProperty('width', 'auto', 'important');
+            fullscreenVideo.style.setProperty('height', 'auto', 'important');
+
+            // Center the video in fullscreen viewport
+            fullscreenVideo.style.setProperty('position', 'absolute', 'important');
+            fullscreenVideo.style.setProperty('top', '50%', 'important');
+            fullscreenVideo.style.setProperty('left', '50%', 'important');
+            fullscreenVideo.style.setProperty('transform', 'translate(-50%, -50%)', 'important');
+
+            // Black background for letterboxing
+            fullscreenVideo.style.setProperty('background-color', '#000', 'important');
+
+            // Force repaint to ensure styles take effect immediately
+            void fullscreenVideo.offsetHeight; // Trigger reflow
+
+            // Auto-play video in fullscreen with controls
+            fullscreenVideo.controls = true;
+            fullscreenVideo.play().catch(err => {
+                console.warn('[Mobile Fullscreen] Auto-play blocked:', err);
+            });
+
+            // Debug: verify applied styles
+            const computed = getComputedStyle(fullscreenVideo);
+            console.log('[Mobile Fullscreen Debug] Applied contain styling with letterboxing:', {
+                objectFit: computed.objectFit,
+                objectPosition: computed.objectPosition,
+                width: computed.width,
+                height: computed.height,
+                position: computed.position
+            });
+        });
+    } else if (!fullscreenElement && video) {
+        // Exiting fullscreen - keep progress saved, don't reset
+        console.log('[Mobile Fullscreen] Exiting fullscreen mode - preserving progress');
+
+        // Pause video but DON'T reset currentTime (progress saved in localStorage)
+        video.pause();
+        video.controls = false; // Remove controls when exiting fullscreen
+
+        // Note: We don't call video.load() or reset currentTime
+        // Progress is preserved in localStorage and will resume on next click
+
+        // Remove inline styles to let CSS take over (collapsed card state)
+        video.style.removeProperty('object-fit');
+        video.style.removeProperty('object-position');
+        video.style.removeProperty('width');
+        video.style.removeProperty('height');
+        video.style.removeProperty('max-width');
+        video.style.removeProperty('max-height');
+        video.style.removeProperty('position');
+        video.style.removeProperty('top');
+        video.style.removeProperty('left');
+        video.style.removeProperty('transform');
+        video.style.removeProperty('background-color');
+
+        console.log('[Mobile Fullscreen] Progress saved at', video.currentTime.toFixed(2) + 's');
     }
 }
 

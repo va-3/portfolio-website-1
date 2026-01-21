@@ -132,11 +132,18 @@
                 </div>
                 <div class="about-video">
                     <div class="video-container">
-                        <!-- Video with poster thumbnail - upload video-thumbnail.jpg to images folder -->
-                        <video controls poster="images/video-thumbnail.jpg" playsinline>
+                        <!-- Video with poster thumbnail - click to play in fullscreen -->
+                        <video poster="images/video-thumbnail.jpg" playsinline>
                             <source src="videos/about-me.mp4" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
+                        <!-- Overlay to indicate click-to-fullscreen -->
+                        <div class="video-overlay">
+                            <div class="video-play-hint">
+                                <i class="fas fa-expand"></i>
+                                <span>Click to watch</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
