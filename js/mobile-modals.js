@@ -47,6 +47,17 @@ function initAboutModal() {
     if (video) {
         // No localStorage persistence - video always resets to 0:00
 
+        // Track iOS fullscreen state (iOS doesn't update document.fullscreenElement)
+        let isIOSFullscreen = false;
+
+        // Helper function to check if video is in fullscreen
+        const isVideoFullscreen = () => {
+            return isIOSFullscreen ||
+                   document.fullscreenElement === video ||
+                   document.webkitFullscreenElement === video ||
+                   document.mozFullScreenElement === video;
+        };
+
         // Helper function to enter fullscreen
         const enterFullscreen = () => {
             // iOS Safari requires webkitEnterFullscreen() specifically for video elements
@@ -54,24 +65,45 @@ function initAboutModal() {
                 console.log('[Mobile Fullscreen] Using iOS webkitEnterFullscreen');
                 try {
                     video.webkitEnterFullscreen();
+                    // Video will auto-play when entering fullscreen on iOS
                 } catch (err) {
                     console.error('[Mobile Fullscreen] iOS fullscreen failed:', err);
                 }
             } else if (video.requestFullscreen) {
-                video.requestFullscreen().catch(err => {
+                video.requestFullscreen().then(() => {
+                    video.play();
+                }).catch(err => {
                     console.error('[Mobile Fullscreen] requestFullscreen failed:', err);
                 });
             } else if (video.webkitRequestFullscreen) {
                 video.webkitRequestFullscreen();
+                setTimeout(() => video.play(), 100);
             } else if (video.mozRequestFullScreen) {
                 video.mozRequestFullScreen();
+                setTimeout(() => video.play(), 100);
             } else if (video.msRequestFullscreen) {
                 video.msRequestFullscreen();
+                setTimeout(() => video.play(), 100);
             } else {
                 console.warn('[Mobile Fullscreen] No fullscreen API available');
             }
             console.log('[Mobile Fullscreen] Entering fullscreen mode');
         };
+
+        // iOS-specific fullscreen events
+        video.addEventListener('webkitbeginfullscreen', () => {
+            isIOSFullscreen = true;
+            console.log('[Mobile Fullscreen] iOS fullscreen started');
+        });
+
+        video.addEventListener('webkitendfullscreen', () => {
+            isIOSFullscreen = false;
+            console.log('[Mobile Fullscreen] iOS fullscreen ended - resetting video');
+            // Reset video on iOS when exiting fullscreen
+            video.pause();
+            video.currentTime = 0;
+            video.load();
+        });
 
         // Helper function to toggle play/pause in fullscreen
         const togglePlayPause = (clientY) => {
@@ -96,11 +128,7 @@ function initAboutModal() {
 
         // Touch event for immediate response (no 300ms delay)
         video.addEventListener('touchend', (e) => {
-            const isFullscreen = document.fullscreenElement === video ||
-                               document.webkitFullscreenElement === video ||
-                               document.mozFullScreenElement === video;
-
-            if (!isFullscreen) {
+            if (!isVideoFullscreen()) {
                 // Not in fullscreen - enter fullscreen mode
                 e.preventDefault(); // Prevent delayed click event
                 e.stopPropagation();
@@ -116,30 +144,31 @@ function initAboutModal() {
 
                 enterFullscreen();
             } else {
-                // Already in fullscreen - toggle pause/play
-                const touch = e.changedTouches[0];
-                if (togglePlayPause(touch.clientY)) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                // Already in fullscreen - toggle pause/play (non-iOS only)
+                // iOS native fullscreen has its own controls, so skip this
+                if (!isIOSFullscreen) {
+                    const touch = e.changedTouches[0];
+                    if (togglePlayPause(touch.clientY)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                 }
             }
         }, { passive: false });
 
         // Click event fallback for non-touch devices
         video.addEventListener('click', (e) => {
-            const isFullscreen = document.fullscreenElement === video ||
-                               document.webkitFullscreenElement === video ||
-                               document.mozFullScreenElement === video;
-
-            if (!isFullscreen) {
+            if (!isVideoFullscreen()) {
                 e.preventDefault();
                 e.stopPropagation();
                 enterFullscreen();
             } else {
-                // Already in fullscreen - toggle pause/play
-                if (togglePlayPause(e.clientY)) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                // Already in fullscreen - toggle pause/play (non-iOS only)
+                if (!isIOSFullscreen) {
+                    if (togglePlayPause(e.clientY)) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
                 }
             }
         });

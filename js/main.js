@@ -329,11 +329,35 @@ function initUniversalFullscreenVideo() {
     videos.forEach(video => {
         // No localStorage persistence - video always resets to 0:00
 
+        // Track iOS fullscreen state (iOS doesn't update document.fullscreenElement)
+        let isIOSFullscreen = false;
+
+        // Helper function to check if video is in fullscreen
+        const isVideoFullscreen = () => {
+            return isIOSFullscreen ||
+                   document.fullscreenElement === video ||
+                   document.webkitFullscreenElement === video ||
+                   document.mozFullScreenElement === video;
+        };
+
+        // iOS-specific fullscreen events
+        video.addEventListener('webkitbeginfullscreen', () => {
+            isIOSFullscreen = true;
+            console.log('[Fullscreen] iOS fullscreen started');
+        });
+
+        video.addEventListener('webkitendfullscreen', () => {
+            isIOSFullscreen = false;
+            console.log('[Fullscreen] iOS fullscreen ended - resetting video');
+            // Reset video on iOS when exiting fullscreen
+            video.pause();
+            video.currentTime = 0;
+            video.load();
+        });
+
         // Click handler - enter fullscreen OR pause/play if already fullscreen
         video.addEventListener('click', (e) => {
-            const isFullscreen = document.fullscreenElement === video ||
-                               document.webkitFullscreenElement === video ||
-                               document.mozFullScreenElement === video;
+            const isFullscreen = isVideoFullscreen();
 
             if (!isFullscreen) {
                 // Not in fullscreen - enter fullscreen mode
@@ -345,42 +369,51 @@ function initUniversalFullscreenVideo() {
                     console.log('[Fullscreen] Using iOS webkitEnterFullscreen');
                     try {
                         video.webkitEnterFullscreen();
+                        // Video will auto-play when entering fullscreen on iOS
                     } catch (err) {
                         console.error('[Fullscreen] iOS fullscreen failed:', err);
                     }
                 } else if (video.requestFullscreen) {
-                    video.requestFullscreen().catch(err => {
+                    video.requestFullscreen().then(() => {
+                        video.play();
+                    }).catch(err => {
                         console.error('[Fullscreen] requestFullscreen failed:', err);
                     });
                 } else if (video.webkitRequestFullscreen) {
                     video.webkitRequestFullscreen();
+                    setTimeout(() => video.play(), 100);
                 } else if (video.mozRequestFullScreen) {
                     video.mozRequestFullScreen();
+                    setTimeout(() => video.play(), 100);
                 } else if (video.msRequestFullscreen) {
                     video.msRequestFullscreen();
+                    setTimeout(() => video.play(), 100);
                 } else {
                     console.warn('[Fullscreen] No fullscreen API available');
                 }
 
                 console.log('[Fullscreen] User clicked video - entering fullscreen mode');
             } else {
-                // Already in fullscreen - toggle pause/play (ignore control bar area)
-                const rect = video.getBoundingClientRect();
-                const clickY = e.clientY - rect.top; // Y position relative to video top
-                const videoHeight = rect.height;
-                const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
+                // Already in fullscreen - toggle pause/play (non-iOS only)
+                // iOS native fullscreen has its own controls, so skip this
+                if (!isIOSFullscreen) {
+                    const rect = video.getBoundingClientRect();
+                    const clickY = e.clientY - rect.top; // Y position relative to video top
+                    const videoHeight = rect.height;
+                    const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
 
-                // Only toggle if click is in top 85% (not on control bar)
-                if (clickY < controlBarThreshold) {
-                    e.preventDefault();
-                    e.stopPropagation();
+                    // Only toggle if click is in top 85% (not on control bar)
+                    if (clickY < controlBarThreshold) {
+                        e.preventDefault();
+                        e.stopPropagation();
 
-                    if (video.paused) {
-                        video.play();
-                        console.log('[Fullscreen] User clicked to play');
-                    } else {
-                        video.pause();
-                        console.log('[Fullscreen] User clicked to pause');
+                        if (video.paused) {
+                            video.play();
+                            console.log('[Fullscreen] User clicked to play');
+                        } else {
+                            video.pause();
+                            console.log('[Fullscreen] User clicked to pause');
+                        }
                     }
                 }
             }
