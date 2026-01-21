@@ -45,41 +45,10 @@ function initAboutModal() {
 
     // Mobile click-to-fullscreen functionality (same as desktop)
     if (video) {
-        // Generate unique storage key for progress saving
-        const videoId = video.src || 'about-video-mobile';
-        const storageKey = `video-progress-${videoId}`;
+        // No localStorage persistence - video always resets to 0:00
 
-        // Restore saved progress on page load
-        const savedProgress = localStorage.getItem(storageKey);
-        if (savedProgress) {
-            const savedTime = parseFloat(savedProgress);
-            video.currentTime = savedTime;
-            console.log(`[Mobile Video Progress] Restored saved position: ${savedTime.toFixed(2)}s`);
-        }
-
-        // Save progress as video plays (debounced)
-        let saveTimeout;
-        video.addEventListener('timeupdate', () => {
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                if (video.duration - video.currentTime > 2) {
-                    localStorage.setItem(storageKey, video.currentTime.toString());
-                }
-            }, 1000);
-        });
-
-        // Clear saved progress when video ends
-        video.addEventListener('ended', () => {
-            localStorage.removeItem(storageKey);
-            console.log('[Mobile Video Progress] Video completed - cleared saved progress');
-        });
-
-        // Click to fullscreen - prevent inline playback
-        video.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            // Enter fullscreen mode
+        // Helper function to enter fullscreen
+        const enterFullscreen = () => {
             if (video.requestFullscreen) {
                 video.requestFullscreen();
             } else if (video.webkitRequestFullscreen) {
@@ -89,8 +58,78 @@ function initAboutModal() {
             } else if (video.msRequestFullscreen) {
                 video.msRequestFullscreen();
             }
+            console.log('[Mobile Fullscreen] Entering fullscreen mode');
+        };
 
-            console.log('[Mobile Fullscreen] User clicked video - entering fullscreen mode');
+        // Helper function to toggle play/pause in fullscreen
+        const togglePlayPause = (clientY) => {
+            const rect = video.getBoundingClientRect();
+            const clickY = clientY - rect.top;
+            const videoHeight = rect.height;
+            const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
+
+            // Only toggle if click is in top 85% (not on control bar)
+            if (clickY < controlBarThreshold) {
+                if (video.paused) {
+                    video.play();
+                    console.log('[Mobile Fullscreen] User tapped to play');
+                } else {
+                    video.pause();
+                    console.log('[Mobile Fullscreen] User tapped to pause');
+                }
+                return true; // Handled
+            }
+            return false; // Not handled (clicked on control bar)
+        };
+
+        // Touch event for immediate response (no 300ms delay)
+        video.addEventListener('touchend', (e) => {
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
+
+            if (!isFullscreen) {
+                // Not in fullscreen - enter fullscreen mode
+                e.preventDefault(); // Prevent delayed click event
+                e.stopPropagation();
+
+                // Add visual feedback
+                const videoContainer = video.closest('.video-container');
+                if (videoContainer) {
+                    videoContainer.style.opacity = '0.8';
+                    setTimeout(() => {
+                        videoContainer.style.opacity = '1';
+                    }, 150);
+                }
+
+                enterFullscreen();
+            } else {
+                // Already in fullscreen - toggle pause/play
+                const touch = e.changedTouches[0];
+                if (togglePlayPause(touch.clientY)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
+        }, { passive: false });
+
+        // Click event fallback for non-touch devices
+        video.addEventListener('click', (e) => {
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
+
+            if (!isFullscreen) {
+                e.preventDefault();
+                e.stopPropagation();
+                enterFullscreen();
+            } else {
+                // Already in fullscreen - toggle pause/play
+                if (togglePlayPause(e.clientY)) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+            }
         });
 
         // Prevent default play behavior on click
@@ -177,17 +216,16 @@ function handleFullscreenChange(video) {
             });
         });
     } else if (!fullscreenElement && video) {
-        // Exiting fullscreen - keep progress saved, don't reset
-        console.log('[Mobile Fullscreen] Exiting fullscreen mode - preserving progress');
+        // Exiting fullscreen - reset video to beginning
+        console.log('[Mobile Fullscreen] Exiting fullscreen mode - resetting video to start');
 
-        // Pause video but DON'T reset currentTime (progress saved in localStorage)
+        // Pause video and reset to 0:00
         video.pause();
+        video.currentTime = 0; // Reset playback position to beginning
         video.controls = false; // Remove controls when exiting fullscreen
+        video.load(); // Reload video to show poster image
 
-        // Note: We don't call video.load() or reset currentTime
-        // Progress is preserved in localStorage and will resume on next click
-
-        // Remove inline styles to let CSS take over (collapsed card state)
+        // Remove all inline styles to restore normal CSS
         video.style.removeProperty('object-fit');
         video.style.removeProperty('object-position');
         video.style.removeProperty('width');
@@ -200,7 +238,7 @@ function handleFullscreenChange(video) {
         video.style.removeProperty('transform');
         video.style.removeProperty('background-color');
 
-        console.log('[Mobile Fullscreen] Progress saved at', video.currentTime.toFixed(2) + 's');
+        console.log('[Mobile Fullscreen] Video reset to 0:00, poster image restored');
     }
 }
 

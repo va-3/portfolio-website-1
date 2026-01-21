@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const typingIndicator = document.getElementById('typing-indicator');
     const typingDots = document.getElementById('typing-dots');
     const dobbyBranding = document.querySelector('.dobby-branding');
+    const minimizeBtn = document.getElementById('chat-minimize-btn');
 
     let isExpanded = false;
     const STORAGE_KEY = 'dobby-chat-history';
@@ -159,6 +160,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear DOM but keep sessionStorage (will restore on expand)
         chatbotMessages.innerHTML = '';
         console.log('Chat collapsed, messages saved to storage');
+    }
+
+    // Minimize button click handler
+    if (minimizeBtn) {
+        minimizeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent card click handler
+            collapseChat();
+        });
     }
 
     // Helper to check if any fullscreen modal is open

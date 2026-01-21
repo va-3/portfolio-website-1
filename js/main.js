@@ -327,53 +327,51 @@ function initUniversalFullscreenVideo() {
     const videos = document.querySelectorAll('.video-container video');
 
     videos.forEach(video => {
-        // Generate unique storage key for this video
-        const videoId = video.src || 'about-video';
-        const storageKey = `video-progress-${videoId}`;
+        // No localStorage persistence - video always resets to 0:00
 
-        // Restore saved progress on page load
-        const savedProgress = localStorage.getItem(storageKey);
-        if (savedProgress) {
-            const savedTime = parseFloat(savedProgress);
-            video.currentTime = savedTime;
-            console.log(`[Video Progress] Restored saved position: ${savedTime.toFixed(2)}s`);
-        }
-
-        // Save progress as video plays (debounced to avoid excessive writes)
-        let saveTimeout;
-        video.addEventListener('timeupdate', () => {
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(() => {
-                // Don't save if at the very end (within 2 seconds)
-                if (video.duration - video.currentTime > 2) {
-                    localStorage.setItem(storageKey, video.currentTime.toString());
-                }
-            }, 1000); // Save every 1 second of playback
-        });
-
-        // Clear saved progress when video ends
-        video.addEventListener('ended', () => {
-            localStorage.removeItem(storageKey);
-            console.log('[Video Progress] Video completed - cleared saved progress');
-        });
-
-        // Click to fullscreen - prevent inline playback
+        // Click handler - enter fullscreen OR pause/play if already fullscreen
         video.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+            const isFullscreen = document.fullscreenElement === video ||
+                               document.webkitFullscreenElement === video ||
+                               document.mozFullScreenElement === video;
 
-            // Enter fullscreen mode
-            if (video.requestFullscreen) {
-                video.requestFullscreen();
-            } else if (video.webkitRequestFullscreen) {
-                video.webkitRequestFullscreen();
-            } else if (video.mozRequestFullScreen) {
-                video.mozRequestFullScreen();
-            } else if (video.msRequestFullscreen) {
-                video.msRequestFullscreen();
+            if (!isFullscreen) {
+                // Not in fullscreen - enter fullscreen mode
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) {
+                    video.webkitRequestFullscreen();
+                } else if (video.mozRequestFullScreen) {
+                    video.mozRequestFullScreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
+
+                console.log('[Fullscreen] User clicked video - entering fullscreen mode');
+            } else {
+                // Already in fullscreen - toggle pause/play (ignore control bar area)
+                const rect = video.getBoundingClientRect();
+                const clickY = e.clientY - rect.top; // Y position relative to video top
+                const videoHeight = rect.height;
+                const controlBarThreshold = videoHeight * 0.85; // Top 85% is clickable
+
+                // Only toggle if click is in top 85% (not on control bar)
+                if (clickY < controlBarThreshold) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    if (video.paused) {
+                        video.play();
+                        console.log('[Fullscreen] User clicked to play');
+                    } else {
+                        video.pause();
+                        console.log('[Fullscreen] User clicked to pause');
+                    }
+                }
             }
-
-            console.log('[Fullscreen] User clicked video - entering fullscreen mode');
         });
 
         // Prevent default play behavior on click
@@ -461,16 +459,16 @@ function handleVideoFullscreen(video) {
             });
         });
     } else if (!fullscreenElement && video) {
-        // Exiting fullscreen - remove all inline styles, keep progress saved
-        console.log('[Fullscreen] Exiting fullscreen mode - restoring normal styles');
+        // Exiting fullscreen - reset video to beginning
+        console.log('[Fullscreen] Exiting fullscreen mode - resetting video to start');
 
-        // Pause video but DON'T reset currentTime (progress is saved in localStorage)
+        // Pause video and reset to 0:00
         video.pause();
+        video.currentTime = 0; // Reset playback position to beginning
         video.controls = false; // Remove controls when exiting fullscreen
+        video.load(); // Reload video to show poster image
 
-        // Note: We don't call video.load() or reset currentTime
-        // Progress is preserved in localStorage and will resume on next click
-
+        // Remove all inline styles to restore normal CSS
         video.style.removeProperty('object-fit');
         video.style.removeProperty('object-position');
         video.style.removeProperty('width');
@@ -483,7 +481,7 @@ function handleVideoFullscreen(video) {
         video.style.removeProperty('transform');
         video.style.removeProperty('background-color');
 
-        console.log('[Fullscreen] Normal styles restored, progress saved at', video.currentTime.toFixed(2) + 's');
+        console.log('[Fullscreen] Video reset to 0:00, poster image restored');
     }
 }
 
