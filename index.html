@@ -186,28 +186,26 @@
                     </div>
                 </div>
 
-            <!-- Right: PDF Resume Viewer (60%) -->
-            <div class="resume-pdf-container">
-                <div class="resume-pdf-inner">
-                    <!-- Static thumbnail - shows INSTANTLY -->
+            <!-- Right: Resume Preview with Download (60%) -->
+            <div class="resume-preview-container">
+                <div class="resume-preview-inner">
+                    <!-- Resume thumbnail image -->
                     <img src="images/resume-thumbnail.png"
-                         class="pdf-placeholder"
-                         alt="Resume preview"
-                         id="pdf-placeholder">
+                         class="resume-preview-image"
+                         alt="Resume preview - Vishnu Anapalli">
 
-                    <!-- PDF loads with visibility hidden, then reveals when ready -->
-                    <object
-                        data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                        type="application/pdf"
-                        id="resume-iframe"
-                        class="resume-pdf"
-                        aria-label="Resume PDF Viewer">
-                        <embed
-                            src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                            type="application/pdf"
-                            class="resume-pdf">
-                        </embed>
-                    </object>
+                    <!-- Download button overlay -->
+                    <a href="images/vishnu-a-resume.pdf"
+                       download="Vishnu-Anapalli-Resume.pdf"
+                       class="resume-download-btn"
+                       aria-label="Download Resume PDF">
+                        <svg class="download-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span>Download Resume</span>
+                    </a>
                 </div>
             </div>
             </div>
@@ -266,24 +264,6 @@
         </div>
     </section>
 
-    <!-- Resume Fullscreen Modal -->
-    <div id="resume-modal" class="resume-modal">
-        <div class="resume-modal-content">
-            <object
-                data="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                type="application/pdf"
-                id="modal-resume-iframe"
-                class="modal-resume-pdf"
-                aria-label="Resume PDF Fullscreen Viewer">
-                <embed
-                    src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                    type="application/pdf"
-                    class="modal-resume-pdf">
-                </embed>
-            </object>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
@@ -291,6 +271,38 @@
             <p>Built with passion and innovation</p>
         </div>
     </footer>
+
+    <!-- Resume Fullscreen Modal -->
+    <div id="resume-fullscreen-modal" class="resume-fullscreen-modal" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title">
+        <!-- Medium-dark grey overlay -->
+        <div class="resume-modal-overlay"></div>
+
+        <!-- Resume container (fullscreen with centered PDF) -->
+        <div class="resume-modal-container">
+            <!-- Centered PDF wrapper with aspect ratio -->
+            <div class="resume-pdf-wrapper">
+                <!-- Download button - top right inside PDF -->
+                <a href="images/vishnu-a-resume.pdf"
+                   download="Vishnu-Anapalli-Resume.pdf"
+                   class="resume-modal-download-btn"
+                   aria-label="Download Resume PDF">
+                    <svg class="download-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                </a>
+
+                <!-- Resume PDF iframe -->
+                <iframe
+                    src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
+                    id="resume-fullscreen-iframe"
+                    class="resume-fullscreen-pdf"
+                    title="Resume PDF Viewer">
+                </iframe>
+            </div>
+        </div>
+    </div>
 
     <!-- Fullscreen Modal for About Me (Mobile) -->
     <div id="about-modal" class="fullscreen-modal" role="dialog" aria-modal="true" aria-labelledby="about-modal-title">
@@ -336,8 +348,7 @@
     <script src="js/theme.js"></script>
     <script src="js/main.js"></script>
     <script src="js/chatbot.js"></script>
-    <script src="js/pdf-loader.js"></script>
-    <script src="js/resume-modal.js"></script>
+    <script src="js/resume-fullscreen.js"></script>
     <script src="js/mobile-modals.js"></script>
 </body>
 </html>

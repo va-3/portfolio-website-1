@@ -838,30 +838,9 @@ section {
 }
 
 /* ================================================
-   PDF THUMBNAIL PLACEHOLDER
+   RESUME PREVIEW CONTAINER - SIMPLE IMAGE + DOWNLOAD
    ================================================ */
-.pdf-placeholder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: 8px;
-    z-index: 2;
-    transition: opacity 0.3s ease-out;
-    pointer-events: none;
-}
-
-.pdf-placeholder.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* ================================================
-   RESUME PDF CONTAINER WITH GPU ACCELERATION
-   ================================================ */
-.resume-pdf-container {
+.resume-preview-container {
     position: relative;
     width: 100%;
     height: auto;
@@ -874,166 +853,220 @@ section {
     border: 2px solid var(--border-color);
     overflow: hidden;
     z-index: 1;
-    cursor: pointer;
-
-    /* GPU Acceleration for container */
-    transform: translateZ(0);
-    will-change: transform, box-shadow;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-
-    /* Prevent content from painting during scroll */
-    contain: layout style paint;
 }
 
-.resume-pdf-container:hover {
-    transform: translateY(-4px) translateZ(0);
+.resume-preview-container:hover {
+    transform: translateY(-4px);
     box-shadow: 0 8px 25px var(--card-shadow);
     border-color: var(--primary-color);
     z-index: 2;
 }
 
-/* Inner wrapper for PDF with white background */
-.resume-pdf-inner {
+/* Inner wrapper for resume image */
+.resume-preview-inner {
     position: relative;
     width: 100%;
     height: 100%;
     background: white;
     border-radius: 8px;
     overflow: hidden;
-    pointer-events: none;
-
-    /* GPU layer promotion */
-    transform: translateZ(0);
-    isolation: isolate;
 }
 
-/* Dark mode PDF wrapper - dark background only, NO filter here */
-[data-theme="dark"] .resume-pdf-inner {
+[data-theme="dark"] .resume-preview-inner {
     background: #1a1625;
 }
 
+/* Resume thumbnail image */
+.resume-preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+
+/* Dark mode - invert resume image colors with improved color balance */
+[data-theme="dark"] .resume-preview-image {
+    filter: invert(0.95) hue-rotate(180deg) contrast(0.9) brightness(1.05);
+}
+
+/* Download button - top right, icon only, appears on hover */
+.resume-download-btn {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(147, 112, 219, 0.4);
+    transition: all 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.resume-preview-container:hover .resume-download-btn {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.resume-download-btn:hover {
+    background: #8056d4;
+    box-shadow: 0 6px 20px rgba(147, 112, 219, 0.6);
+    transform: scale(1.1);
+}
+
+.resume-download-btn:active {
+    transform: scale(0.95);
+}
+
+/* Hide the text span, show only icon */
+.resume-download-btn span {
+    display: none;
+}
+
+.download-icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+}
+
 /* ================================================
-   PDF LOADING STATE & GPU ACCELERATION
+   RESUME FULLSCREEN MODAL
    ================================================ */
-.resume-pdf {
-    width: calc(100% + 60px);
-    height: calc(100% + 60px);
-    border: none !important;
-    outline: none !important;
-    margin: -30px !important;
-    padding: 0 !important;
-    display: block;
-    background: white !important;
-    object-fit: contain;
-    position: relative;
 
-    /* GPU Acceleration for smooth scrolling */
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-
-    /* Smooth rendering */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-
-    /* Initially hidden - reveals when loaded */
-    visibility: hidden;
-    z-index: 1;
-}
-
-.resume-pdf.loaded {
-    visibility: visible;
-    z-index: 3;
-}
-
-/* Scroll performance optimization */
-.resume-pdf-container object,
-.resume-pdf-container embed {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    position: relative !important;
-    display: block;
-
-    /* Prevent repaints during scroll */
-    contain: strict;
-    content-visibility: auto;
-}
-
-/* Dark mode - ONLY filter applied to actual PDF object/embed */
-[data-theme="dark"] .resume-pdf-container object,
-[data-theme="dark"] .resume-pdf-container embed {
-    filter: invert(0.92) hue-rotate(180deg) contrast(0.85) brightness(1.1);
-}
-
-/* Resume Fullscreen Modal */
-.resume-modal {
+/* Modal container - hidden by default */
+.resume-fullscreen-modal {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    z-index: 10000;
-    backdrop-filter: blur(4px);
-}
-
-.resume-modal.active {
-    display: flex;
+    z-index: 25000;
     align-items: center;
     justify-content: center;
 }
 
-.resume-modal-content {
+/* Show modal when active */
+.resume-fullscreen-modal.active {
+    display: flex;
+}
+
+/* Medium-dark grey overlay - clickable to close */
+.resume-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(60, 60, 60, 0.85);
+    backdrop-filter: blur(2px);
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* Resume container - 100% viewport with grey background */
+.resume-modal-container {
     position: relative;
-    width: 70vw;
-    max-width: 800px;
-    height: auto;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(60, 60, 60, 0.85);
+    z-index: 2;
+}
+
+/* Dark mode - same grey overlay */
+[data-theme="dark"] .resume-modal-container {
+    background: rgba(60, 60, 60, 0.85);
+}
+
+/* PDF wrapper - centered, maintains aspect ratio */
+.resume-pdf-wrapper {
+    position: relative;
+    width: auto;
+    height: 95vh;
     aspect-ratio: 8.5 / 11;
-    max-height: 95vh;
-    background: white;
-    border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="dark"] .resume-modal-content {
-    background: #1a1625;
-    border: 2px solid #9370DB;
-}
+/* Resume PDF iframe - balanced sizing to remove borders without cropping content */
+.resume-fullscreen-pdf {
+    /* Moderate sizing - removes most white borders while preserving content */
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
+    margin: -15px;
 
-.modal-resume-pdf {
-    width: 100%;
-    height: 100%;
-    border: none !important;
-    outline: none !important;
-    margin: 0 !important;
-    object-fit: contain;
+    /* Subtle transform scale for additional border removal */
+    transform: scale(1.01);
+    transform-origin: center center;
+    -webkit-transform: scale(1.01);
+    -webkit-transform-origin: center center;
+
+    border: none;
+    outline: none;
+    display: block;
+    background: white;
     position: relative;
 }
 
-/* Apply clean styling to modal PDF object/embed */
-.resume-modal-content object,
-.resume-modal-content embed {
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    position: relative !important;
-    display: block;
+/* Chrome-specific: prevent double-scaling issues */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .resume-fullscreen-pdf {
+        zoom: 1;
+    }
 }
 
-/* Dark mode modal - ONLY filter applied to actual PDF object/embed */
-[data-theme="dark"] .resume-modal-content object,
-[data-theme="dark"] .resume-modal-content embed {
-    filter: invert(0.92) hue-rotate(180deg) contrast(0.85) brightness(1.1);
+/* Dark mode - invert PDF colors with improved balance */
+[data-theme="dark"] .resume-fullscreen-pdf {
+    filter: invert(0.95) hue-rotate(180deg) contrast(0.9) brightness(1.05);
+}
+
+/* Download button - top right inside PDF */
+.resume-modal-download-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(147, 112, 219, 0.4);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.resume-modal-download-btn:hover {
+    background: #8056d4;
+    box-shadow: 0 6px 20px rgba(147, 112, 219, 0.6);
+    transform: scale(1.1);
+}
+
+.resume-modal-download-btn:active {
+    transform: scale(0.95);
+}
+
+.resume-modal-download-btn svg {
+    width: 22px;
+    height: 22px;
 }
 
 /* Mobile Responsive */
@@ -1043,7 +1076,7 @@ section {
         grid-template-rows: auto auto;
     }
 
-    .resume-pdf-container {
+    .resume-preview-container {
         order: -1;
         height: 500px;
     }
@@ -1062,10 +1095,6 @@ section {
         margin-bottom: var(--spacing-xl); /* Restore spacing */
     }
 
-    .resume-modal-content {
-        width: 95%;
-        height: 95vh;
-    }
 }
 
 /* Skills Section */
@@ -2249,7 +2278,7 @@ section {
     }
 
     /* Compact resume PDF preview */
-    .resume-pdf-container {
+    .resume-preview-container {
         height: 400px; /* Smaller preview */
     }
 
