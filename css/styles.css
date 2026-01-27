@@ -564,12 +564,6 @@ section {
     font-weight: 400;
     letter-spacing: 0.01em;
 }
-
-/* First paragraph emphasis for visual hierarchy */
-.about-paragraph:first-child {
-    font-weight: 500;
-}
-
 .about-video {
     display: flex;
     justify-content: center;
