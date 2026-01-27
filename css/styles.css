@@ -557,12 +557,12 @@ section {
 
 .about-paragraph {
     font-family: var(--font-secondary);
-    font-size: 1rem; /* Reduced from 1.1rem for more compact appearance */
-    line-height: 1.65; /* Reduced from 1.8 for less vertical height */
+    font-size: 1.05rem; /* Slightly larger for better readability */
+    line-height: 1.65;
     color: var(--text-primary);
-    text-align: justify;
+    text-align: left; /* Changed from justify to fix inconsistent word spacing */
     font-weight: 400;
-    letter-spacing: 0.01em; /* Professional letter-spacing for crisp readability */
+    letter-spacing: 0.01em;
 }
 
 /* First paragraph emphasis for visual hierarchy */
