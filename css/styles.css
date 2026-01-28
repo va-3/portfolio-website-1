@@ -1088,13 +1088,13 @@ section {
     filter: invert(0.95) hue-rotate(180deg) contrast(0.9) brightness(1.05);
 }
 
-/* PDF Navigation Controls */
+/* PDF Navigation Controls - Hidden for single-page resumes */
 .pdf-navigation-controls {
     position: absolute;
     bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    display: flex;
+    display: none; /* Hidden - only needed for multi-page PDFs */
     align-items: center;
     gap: 16px;
     background: rgba(0, 0, 0, 0.75);
