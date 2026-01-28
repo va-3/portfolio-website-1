@@ -293,13 +293,27 @@
                     </svg>
                 </a>
 
-                <!-- Resume PDF iframe -->
-                <iframe
-                    src="images/vishnu-a-resume.pdf#view=Fit&toolbar=0&navpanes=0&scrollbar=0"
-                    id="resume-fullscreen-iframe"
-                    class="resume-fullscreen-pdf"
-                    title="Resume PDF Viewer">
-                </iframe>
+                <!-- PDF Canvas Container -->
+                <div class="pdf-canvas-container">
+                    <canvas id="pdf-canvas" class="resume-fullscreen-pdf" aria-label="Resume PDF"></canvas>
+                </div>
+
+                <!-- PDF Navigation Controls -->
+                <div class="pdf-navigation-controls">
+                    <button id="pdf-prev" class="pdf-nav-btn" aria-label="Previous page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                    <div class="pdf-page-info">
+                        <span id="page-num">1</span> / <span id="page-count">1</span>
+                    </div>
+                    <button id="pdf-next" class="pdf-nav-btn" aria-label="Next page">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -348,6 +362,7 @@
     <script src="js/theme.js"></script>
     <script src="js/main.js"></script>
     <script src="js/chatbot.js"></script>
+    <script src="js/pdf-viewer.js"></script>
     <script src="js/resume-fullscreen.js"></script>
     <script src="js/mobile-modals.js"></script>
 </body>

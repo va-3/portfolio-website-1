@@ -874,7 +874,8 @@ section {
 .resume-preview-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Show full resume, don't crop */
+    object-position: center top; /* Align to top for better preview */
     border-radius: 8px;
     display: block;
 }
@@ -1063,6 +1064,135 @@ section {
     height: 22px;
 }
 
+/* PDF Canvas Container */
+.pdf-canvas-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+}
+
+/* PDF Canvas - will be sized by JavaScript */
+#pdf-canvas {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    background: white;
+}
+
+/* Dark mode - invert PDF canvas colors */
+[data-theme="dark"] #pdf-canvas {
+    filter: invert(0.95) hue-rotate(180deg) contrast(0.9) brightness(1.05);
+}
+
+/* PDF Navigation Controls */
+.pdf-navigation-controls {
+    position: absolute;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    border-radius: 32px;
+    z-index: 10;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* PDF Navigation Buttons */
+.pdf-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pdf-nav-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.pdf-nav-btn:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.pdf-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pdf-nav-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* PDF Page Info */
+.pdf-page-info {
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    user-select: none;
+    min-width: 60px;
+    text-align: center;
+}
+
+/* Mobile - adjust navigation controls */
+@media (max-width: 768px) {
+    .pdf-navigation-controls {
+        bottom: 16px;
+        padding: 10px 16px;
+        gap: 12px;
+    }
+
+    .pdf-nav-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .pdf-nav-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .pdf-page-info {
+        font-size: 13px;
+        min-width: 50px;
+    }
+
+    /* Adjust PDF wrapper for mobile */
+    .resume-pdf-wrapper {
+        width: 95vw;
+        height: calc(90vh - 80px); /* Account for navigation controls */
+        aspect-ratio: unset; /* Remove aspect ratio constraint on mobile */
+        max-width: 100vw; /* Ensure it doesn't overflow */
+    }
+
+    /* PDF canvas container adjustments for mobile */
+    .pdf-canvas-container {
+        padding: var(--spacing-sm); /* Add small padding */
+    }
+
+    /* Navigation controls - slightly more compact on mobile */
+    .pdf-navigation-controls {
+        bottom: 12px;
+    }
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
     .resume-grid {
@@ -1072,7 +1202,9 @@ section {
 
     .resume-preview-container {
         order: -1;
-        height: 500px;
+        height: auto; /* Let aspect ratio determine height */
+        min-height: 500px; /* Ensure minimum visibility */
+        max-height: 70vh; /* Prevent excessive height on tall screens */
     }
 
     .pdf-viewer-wrapper {
@@ -2273,7 +2405,9 @@ section {
 
     /* Compact resume PDF preview */
     .resume-preview-container {
-        height: 400px; /* Smaller preview */
+        height: auto; /* Let aspect ratio determine height */
+        min-height: 350px; /* Smaller but still visible */
+        max-height: 60vh; /* Prevent excessive height */
     }
 
     /* Chatbot optimization */
@@ -2727,5 +2861,245 @@ video::-webkit-backdrop {
 @media (min-width: 769px) {
     .fullscreen-modal {
         display: none;
+    }
+}
+
+/* ============================================
+   HOVER & TOUCH INTERACTION FIXES
+   ============================================
+   Prevents sticky hover states on mobile devices
+   by wrapping all hover effects in media queries
+   ============================================ */
+
+/* Only apply hover effects on devices with mouse/trackpad */
+@media (hover: hover) and (pointer: fine) {
+    .nav-logo:hover {
+        transform: scale(1.25);
+        box-shadow: 0 0 30px var(--purple-glow), 0 0 60px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-light);
+    }
+
+    .theme-toggle:hover {
+        transform: scale(1.15);
+    }
+
+    .home-link:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 25px var(--purple-glow), 0 0 50px rgba(99, 102, 241, 0.2);
+    }
+
+    .home-link:hover i {
+        transform: scale(1.15);
+    }
+
+    .nav-link:hover {
+        transform: translateY(-2px);
+        text-shadow: 0 2px 8px rgba(147, 112, 219, 0.3);
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(99, 102, 241, 0.1);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .profile-circle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 15px 40px rgba(147, 112, 219, 0.3);
+    }
+
+    .about-text-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .video-container:hover {
+        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .video-container:hover .video-overlay {
+        opacity: 1;
+    }
+
+    .goal-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .timeline-content:hover {
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+        border-color: var(--primary-color);
+    }
+
+    .resume-preview-container:hover {
+        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25);
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+
+    .resume-preview-container:hover .resume-download-btn {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .resume-download-btn:hover {
+        background: #8056d4;
+        box-shadow: 0 6px 20px rgba(147, 112, 219, 0.6);
+        transform: scale(1.1);
+    }
+
+    .resume-modal-download-btn:hover {
+        background: #8056d4;
+        box-shadow: 0 6px 20px rgba(147, 112, 219, 0.6);
+        transform: scale(1.1);
+    }
+
+    .pdf-nav-btn:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.05);
+    }
+
+    .skills-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .skill-tag:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .gallery-item:hover {
+        transform: scale(1.03);
+        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25);
+    }
+
+    .fact-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .social-link:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(147, 112, 219, 0.4);
+    }
+
+    .ai-chat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        border-color: var(--primary-color);
+    }
+
+    .ai-chat-card.expanded:hover {
+        transform: none;
+    }
+
+    .chat-minimize-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .expand-btn:hover {
+        background: rgba(147, 112, 219, 0.2);
+        transform: scale(1.05);
+    }
+
+    .chat-send-button:hover {
+        background: var(--primary-dark);
+    }
+
+    .modal-navbar .chatbot-close:hover {
+        background: rgba(255, 59, 48, 0.1);
+        color: #ff3b30;
+    }
+
+    .chatbot-send:hover {
+        background: var(--primary-dark);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary-dark);
+    }
+
+    .modal-close-btn:hover {
+        background: rgba(255, 59, 48, 0.1);
+        color: #ff3b30;
+    }
+}
+
+/* Touch devices: Use :active instead of :hover for feedback */
+@media (hover: none) and (pointer: coarse) {
+    .btn-primary:active {
+        background: var(--primary-dark);
+        transform: scale(0.98);
+    }
+
+    .btn-secondary:active {
+        background: rgba(99, 102, 241, 0.15);
+        transform: scale(0.98);
+    }
+
+    .resume-download-btn:active {
+        background: #8056d4;
+        transform: scale(0.95);
+    }
+
+    .resume-modal-download-btn:active {
+        background: #8056d4;
+        transform: scale(0.95);
+    }
+
+    .pdf-nav-btn:active:not(:disabled) {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(0.95);
+    }
+
+    .skill-tag:active {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(0.95);
+    }
+
+    .social-link:active {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(0.95);
+    }
+
+    .expand-btn:active {
+        background: rgba(147, 112, 219, 0.3);
+        transform: scale(0.95);
+    }
+
+    .chat-send-button:active {
+        background: var(--primary-dark);
+        transform: scale(0.95);
+    }
+
+    .chatbot-send:active {
+        background: var(--primary-dark);
+        transform: scale(0.95);
+    }
+
+    .modal-close-btn:active {
+        background: rgba(255, 59, 48, 0.15);
+        transform: scale(0.95);
     }
 }

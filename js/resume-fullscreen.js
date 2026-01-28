@@ -23,6 +23,11 @@
     function openModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden'; // Prevent background scrolling
+
+        // Initialize PDF viewer on first open (lazy loading)
+        if (window.PDFViewer && typeof window.PDFViewer.init === 'function') {
+            window.PDFViewer.init();
+        }
     }
 
     /**
@@ -64,20 +69,9 @@
         }
     });
 
-    // Prevent modal download button from closing modal
-    if (downloadBtnModal) {
-        downloadBtnModal.addEventListener('click', function(e) {
-            // Let the download happen, but don't propagate to overlay
-            e.stopPropagation();
-        });
-    }
-
-    // Prevent preview download button from opening modal
-    if (downloadBtnPreview) {
-        downloadBtnPreview.addEventListener('click', function(e) {
-            // Let the download happen, but don't propagate to container
-            e.stopPropagation();
-        });
-    }
+    // Download buttons handle clicks naturally - no stopPropagation needed
+    // The closest() check in resumePreviewContainer already handles this
+    // For modal download button, clicking it won't trigger container click
+    // because the target won't be the container itself
 
 })();

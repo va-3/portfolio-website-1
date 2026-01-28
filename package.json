@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Vishnu Anapalli's Professional Portfolio Website",
   "dependencies": {
-    "openai": "^4.77.0"
+    "openai": "^4.77.0",
+    "pdfjs-dist": "^5.4.530"
   }
 }
