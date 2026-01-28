@@ -33,6 +33,9 @@
     let prevButton = null;
     let nextButton = null;
 
+    // iOS Safari detection
+    const isIOSSafari = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
     /**
      * Lazy load PDF.js library from CDN
      * Only loads when user first opens the resume modal
@@ -137,6 +140,19 @@
     }
 
     /**
+     * Clean up canvas memory (iOS Safari compatibility)
+     * Safari hoards canvas memory - this forces release before new render
+     */
+    function cleanupCanvas() {
+        if (canvas && context) {
+            // Shrink canvas to 1x1 to release memory
+            canvas.width = 1;
+            canvas.height = 1;
+            context.clearRect(0, 0, 1, 1);
+        }
+    }
+
+    /**
      * Render a specific page with responsive viewport and high-DPI support
      */
     async function renderPage(pageNumber) {
@@ -146,6 +162,9 @@
         updateNavigationButtons();
 
         try {
+            // Clean up canvas before rendering (iOS Safari memory management)
+            cleanupCanvas();
+
             // Get the page
             const page = await pdfDocument.getPage(pageNumber);
 
@@ -169,8 +188,13 @@
             // Get final viewport with calculated scale
             const scaledViewport = page.getViewport({ scale: scale });
 
-            // High-DPI/Retina display support
-            const outputScale = window.devicePixelRatio || 1;
+            // High-DPI/Retina display support with iOS Safari limits
+            // iOS has 384 MB canvas memory limit - cap at 2x to prevent crashes
+            let outputScale = window.devicePixelRatio || 1;
+            if (isIOSSafari && outputScale > 2) {
+                outputScale = 2; // Cap at 2x for iOS to stay under memory limit
+                console.log('iOS detected: capping devicePixelRatio at 2x');
+            }
 
             // Set canvas dimensions (pixel perfect for high-DPI)
             canvas.width = Math.floor(scaledViewport.width * outputScale);
